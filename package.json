@@ -5,12 +5,14 @@
   "type": "module",
   "description": "Monthly shift scheduling and trainee assignment app backed by Netlify Database (Postgres).",
   "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
     "db:migrate": "drizzle-kit migrate",
     "db:seed": "tsx db/seed.ts",
-    "typecheck": "tsc --noEmit",
-    "build": "npm run typecheck"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
