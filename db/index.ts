@@ -5,6 +5,7 @@ import * as schema from "./schema.js";
 
 const connectionString = process.env.DATABASE_URL!;
 
-// יצירת ה-client בדרך ש-drizzle-orm/neon-http מצפה לה
 export const sql = neon(connectionString);
-export const db = drizzle({ client: sql, schema });
+
+// שינוי כאן: העברה כארגומנט הראשון, ואז האובייקט עם ה-schema
+export const db = drizzle(sql, { schema });
