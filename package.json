@@ -1,0 +1,31 @@
+{
+  "name": "mda-shift-scheduler",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Monthly shift scheduling and trainee assignment app backed by Netlify Database (Postgres).",
+  "scripts": {
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push",
+    "db:migrate": "drizzle-kit migrate",
+    "db:seed": "tsx db/seed.ts",
+    "typecheck": "tsc --noEmit",
+    "build": "npm run typecheck"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
+    "@netlify/database": "^1.1.0",
+    "@netlify/functions": "^4.3.0",
+    "drizzle-orm": "^1.0.0-rc.4-5d5b77c",
+    "nodemailer": "^6.9.7",
+    "postgres": "^3.4.9",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "@types/nodemailer": "^8.0.1",
+    "drizzle-kit": "^1.0.0-beta.22",
+    "tsx": "^4.20.3",
+    "typescript": "^6.0.3"
+  }
+}

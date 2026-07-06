@@ -1,0 +1,91 @@
+import { MySqlColumn } from "../columns/common.js";
+import { SelectedFieldsOrdered } from "./select.types.js";
+import { entityKind } from "../../entity.js";
+import { Subquery } from "../../subquery.js";
+import { ValueOrArray } from "../../utils.js";
+import { Placeholder, Query, SQL, SQLWrapper, SqlCommenterInput } from "../../sql/sql.js";
+import { MySqlDialect } from "../dialect.js";
+import { AnyMySqlQueryResultHKT, MySqlPreparedQuery, MySqlPreparedQueryConfig, MySqlQueryResultHKT, MySqlQueryResultKind, MySqlSession } from "../session.js";
+import { MySqlTable } from "../table.js";
+import { QueryPromise } from "../../query-promise.js";
+
+//#region src/mysql-core/query-builders/delete.d.ts
+type MySqlDeleteWithout<T extends AnyMySqlDeleteBase, TDynamic extends boolean, K extends keyof T & string> = TDynamic extends true ? T : Omit<MySqlDeleteBase<T['_']['table'], T['_']['queryResult'], TDynamic, T['_']['excludedMethods'] | K>, T['_']['excludedMethods'] | K>;
+type MySqlDelete<TTable extends MySqlTable = MySqlTable, TQueryResult extends MySqlQueryResultHKT = AnyMySqlQueryResultHKT> = MySqlDeleteBase<TTable, TQueryResult, true, never>;
+type MySqlDeletePrepare<T extends AnyMySqlDeleteBase> = MySqlPreparedQuery<MySqlPreparedQueryConfig & {
+  execute: MySqlQueryResultKind<T['_']['queryResult'], never>;
+  iterator: never;
+}>;
+interface MySqlDeleteConfig {
+  where?: SQL | undefined;
+  limit?: number | Placeholder;
+  orderBy?: (MySqlColumn | SQL | SQL.Aliased)[];
+  table: MySqlTable;
+  returning?: SelectedFieldsOrdered;
+  withList?: Subquery[];
+  comment?: SQL;
+}
+type MySqlDeleteDynamic<T extends AnyMySqlDeleteBase> = MySqlDelete<T['_']['table'], T['_']['queryResult']>;
+type AnyMySqlDeleteBase = MySqlDeleteBase<any, any, any, any>;
+interface MySqlDeleteBase<TTable extends MySqlTable, TQueryResult extends MySqlQueryResultHKT, TDynamic extends boolean = false, TExcludedMethods extends string = never> extends QueryPromise<MySqlQueryResultKind<TQueryResult, never>> {
+  readonly _: {
+    readonly table: TTable;
+    readonly queryResult: TQueryResult;
+    readonly dynamic: TDynamic;
+    readonly excludedMethods: TExcludedMethods;
+  };
+}
+declare class MySqlDeleteBase<TTable extends MySqlTable, TQueryResult extends MySqlQueryResultHKT, TDynamic extends boolean = false, TExcludedMethods extends string = never> extends QueryPromise<MySqlQueryResultKind<TQueryResult, never>> implements SQLWrapper {
+  private table;
+  private session;
+  private dialect;
+  static readonly [entityKind]: string;
+  private config;
+  constructor(table: TTable, session: MySqlSession, dialect: MySqlDialect, withList?: Subquery[]);
+  /**
+   * Adds a `where` clause to the query.
+   *
+   * Calling this method will delete only those rows that fulfill a specified condition.
+   *
+   * See docs: {@link https://orm.drizzle.team/docs/delete}
+   *
+   * @param where the `where` clause.
+   *
+   * @example
+   * You can use conditional operators and `sql function` to filter the rows to be deleted.
+   *
+   * ```ts
+   * // Delete all cars with green color
+   * db.delete(cars).where(eq(cars.color, 'green'));
+   * // or
+   * db.delete(cars).where(sql`${cars.color} = 'green'`)
+   * ```
+   *
+   * You can logically combine conditional operators with `and()` and `or()` operators:
+   *
+   * ```ts
+   * // Delete all BMW cars with a green color
+   * db.delete(cars).where(and(eq(cars.color, 'green'), eq(cars.brand, 'BMW')));
+   *
+   * // Delete all cars with the green or blue color
+   * db.delete(cars).where(or(eq(cars.color, 'green'), eq(cars.color, 'blue')));
+   * ```
+   */
+  where(where: SQL | undefined): MySqlDeleteWithout<this, TDynamic, 'where'>;
+  orderBy(builder: (deleteTable: TTable) => ValueOrArray<MySqlColumn | SQL | SQL.Aliased>): MySqlDeleteWithout<this, TDynamic, 'orderBy'>;
+  orderBy(...columns: (MySqlColumn | SQL | SQL.Aliased)[]): MySqlDeleteWithout<this, TDynamic, 'orderBy'>;
+  limit(limit: number | Placeholder): MySqlDeleteWithout<this, TDynamic, 'limit'>;
+  /**
+   * Attach [sqlcommenter](https://google.github.io/sqlcommenter) comment to a query
+   */
+  comment(comment: SqlCommenterInput): MySqlDeleteWithout<this, TDynamic, 'comment'>;
+  toSQL(): Query;
+  prepare(): MySqlDeletePrepare<this>;
+  execute: ReturnType<this['prepare']>['execute'];
+  private createIterator;
+  iterator: ReturnType<this["prepare"]>["iterator"];
+  $dynamic(): MySqlDeleteDynamic<this>;
+}
+//#endregion
+export { MySqlDelete, MySqlDeleteBase, MySqlDeleteConfig, MySqlDeletePrepare, MySqlDeleteWithout };
+//# sourceMappingURL=delete.d.ts.map

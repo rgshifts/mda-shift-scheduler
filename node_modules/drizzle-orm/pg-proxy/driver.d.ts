@@ -1,0 +1,21 @@
+import { PgRemoteQueryResultHKT } from "./session.js";
+import { entityKind } from "../entity.js";
+import { PgCodecs } from "../pg-core/codecs.js";
+import { PgAsyncDatabase } from "../pg-core/async/db.js";
+import { PgDialect } from "../pg-core/dialect.js";
+import { AnyRelations, EmptyRelations } from "../relations.js";
+import { DrizzlePgConfig } from "../pg-core/utils.js";
+
+//#region src/pg-proxy/driver.d.ts
+declare class PgRemoteDatabase<TRelations extends AnyRelations = EmptyRelations> extends PgAsyncDatabase<PgRemoteQueryResultHKT, TRelations> {
+  static readonly [entityKind]: string;
+}
+type RemoteCallback = (sql: string, params: any[], method: 'all' | 'execute') => Promise<{
+  rows: any[];
+}>;
+declare function drizzle<TRelations extends AnyRelations = EmptyRelations>(callback: RemoteCallback, config?: DrizzlePgConfig<TRelations> & {
+  codecs?: PgCodecs;
+}, _dialect?: () => PgDialect): PgRemoteDatabase<TRelations>;
+//#endregion
+export { PgRemoteDatabase, RemoteCallback, drizzle };
+//# sourceMappingURL=driver.d.ts.map
