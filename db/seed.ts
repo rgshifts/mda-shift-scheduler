@@ -139,12 +139,7 @@ async function main() {
   console.log("Seed complete: singletons and system roles are initialized.");
 }
 
-main()
-  .catch((error) => {
-    console.error("Seed failed", error);
-    process.exitCode = 1;
-  })
-  .finally(async () => {
-    // postgres-js keeps sockets open by default; ending avoids hanging CLI runs.
-    await queryClient.end({ timeout: 5 });
-  });
+main().catch((error) => {
+  console.error("Seed failed", error);
+  process.exitCode = 1;
+});
