@@ -1,0 +1,3925 @@
+/* ============================================================
+   אתר שיבוצים מדא רמת גן — Stylesheet
+   Aesthetic: refined editorial / emergency-medical utilitarian
+   Warm paper ground, professional blue accent, Frank Ruhl Libre display.
+   Fully RTL. Light + dark mode via [data-theme].
+   ============================================================ */
+
+:root {
+  --paper:        #f3efe6;
+  --paper-2:      #eae3d6;
+  --surface:      #fffdf8;
+  --surface-2:    #faf6ed;
+  --ink:          #211c19;
+  --ink-soft:     #5c5349;
+  --ink-faint:    #908779;
+  --line:         #e2dac9;
+  --line-strong:  #d2c8b2;
+
+  /* Primary brand accent — professional blue (royal/indigo). */
+  --brand:        #1d4ed8;
+  --brand-deep:   #1b3aa0;
+  --brand-soft:   #e2e8fb;
+  --brand-rgb:    29,78,216;
+
+  /* Danger / "cannot" — kept red. Used for destructive actions, lock
+     warnings and the "לא יכול" availability status. NOT brand. */
+  --danger:       #a8132b;
+  --danger-deep:  #7d0e20;
+  --danger-soft:  #f7e3e2;
+  --danger-rgb:   168,19,43;
+
+  --gold:         #b88a3e;
+  --gold-soft:    #f3e9d4;
+  --teal:         #2c6b62;
+
+  --ok:           #2c6b3f;
+  --ok-soft:      #e2efe2;
+
+  /* Form-control surface — flips to a dark inset in dark mode. */
+  --field-bg:     #fff;
+
+  --shadow-sm: 0 1px 2px rgba(33,28,25,.06), 0 2px 8px rgba(33,28,25,.05);
+  --shadow-md: 0 6px 24px rgba(33,28,25,.10), 0 2px 6px rgba(33,28,25,.06);
+  --shadow-lg: 0 24px 60px rgba(45,20,18,.20);
+
+  --radius:    14px;
+  --radius-sm: 9px;
+  --display: "Frank Ruhl Libre", Georgia, serif;
+  --body: "Rubik", "Segoe UI", system-ui, sans-serif;
+}
+
+/* ---------- Dark mode ----------
+   Charcoal grounds (not pitch black), soft-grey/white ink, subtle borders.
+   Brand blue brightens slightly for pop; pastel status chips stay light so
+   they keep their meaning and contrast on dark surfaces. */
+html[data-theme="dark"] {
+  --paper:        #14171c;
+  --paper-2:      #0f1216;
+  --surface:      #1d222a;
+  --surface-2:    #181d24;
+  --ink:          #e9ebee;
+  --ink-soft:     #b3b9c2;
+  --ink-faint:    #828994;
+  --line:         #2c333d;
+  --line-strong:  #3b424e;
+
+  --brand:        #3b82f6;
+  --brand-deep:   #2563eb;
+  --brand-rgb:    59,130,246;
+
+  --field-bg:     #11151a;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.40), 0 2px 8px rgba(0,0,0,.30);
+  --shadow-md: 0 6px 24px rgba(0,0,0,.45), 0 2px 6px rgba(0,0,0,.35);
+  --shadow-lg: 0 24px 60px rgba(0,0,0,.55);
+}
+
+/* Smooth, fluid mode switching across the structural surfaces. */
+body, .topbar, .login-view, .login-card, .calendar-wrap, .day-cell, .day-detail,
+.shift-card, .shift-card-head, .table-card, .users-table th, .station-form-card,
+.lock-config-card, .avail-card, .avail-row, .avail-opt, .nav-tab,
+.field input, .slot select, .slot input, .station-form input, .station-form select,
+.lock-form input, .lock-form select, .users-table select, .btn-xs, .theme-toggle,
+.context-toggle {
+  transition: background-color .3s ease, color .3s ease, border-color .3s ease;
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--body);
+  color: var(--ink);
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(1100px 540px at 88% -8%, rgba(var(--brand-rgb),.07), transparent 60%),
+    radial-gradient(900px 600px at -6% 108%, rgba(184,138,62,.10), transparent 55%);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3 { font-family: var(--display); font-weight: 700; letter-spacing: -.01em; margin: 0; }
+
+button { font-family: inherit; cursor: pointer; }
+
+/* Utility class used by JS-driven accordions (tracking buckets). */
+.hidden { display: none !important; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: transform .12s ease, box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+}
+.btn:active { transform: translateY(1px); }
+.btn-primary {
+  background: linear-gradient(165deg, var(--brand), var(--brand-deep));
+  color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+.btn-primary:hover { box-shadow: 0 8px 22px rgba(var(--brand-rgb),.30); }
+.btn-block { width: 100%; padding: 13px; font-size: 15px; }
+.btn-ghost {
+  background: transparent;
+  border-color: var(--line-strong);
+  color: var(--ink-soft);
+}
+.btn-ghost:hover { background: var(--surface); color: var(--ink); }
+.btn-circle {
+  width: 38px; height: 38px; padding: 0;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  color: var(--brand);
+  font-size: 22px; line-height: 1;
+  display: grid; place-items: center;
+}
+.btn-circle:hover { background: var(--brand); color: #fff; border-color: var(--brand); }
+.btn:disabled, .btn[disabled] { opacity: .5; cursor: not-allowed; }
+
+/* ---------- Theme (dark mode) toggle ---------- */
+.theme-toggle {
+  width: 38px; height: 38px; padding: 0; flex: none;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  color: var(--brand);
+  box-shadow: var(--shadow-sm);
+  transition: background .2s ease, color .2s ease, border-color .2s ease, transform .12s ease;
+}
+.theme-toggle:hover { background: var(--brand); color: #fff; border-color: var(--brand); }
+.theme-toggle:active { transform: translateY(1px); }
+.theme-toggle svg { display: block; }
+.context-toggle {
+  min-height: 38px; padding: 0 14px; flex: none;
+  border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  color: var(--brand);
+  box-shadow: var(--shadow-sm);
+  font-size: 13px; font-weight: 700;
+  white-space: nowrap;
+  transition: background .2s ease, color .2s ease, border-color .2s ease, transform .12s ease;
+}
+.context-toggle:hover { background: var(--brand); color: #fff; border-color: var(--brand); }
+.context-toggle:active { transform: translateY(1px); }
+.login-theme-toggle {
+  position: absolute; top: 16px; inset-inline-start: 16px; z-index: 2;
+}
+
+/* ---------- Notification center (bell + dropdown) ---------- */
+.notif { position: relative; flex: none; }
+.notif-bell {
+  position: relative;
+  width: 38px; height: 38px; padding: 0;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  color: var(--brand);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease, border-color .2s ease, transform .12s ease;
+}
+.notif-bell:hover { background: var(--brand); color: #fff; border-color: var(--brand); }
+.notif-bell:active { transform: translateY(1px); }
+.notif-bell svg { display: block; }
+.notif.is-open .notif-bell { background: var(--brand); color: #fff; border-color: var(--brand); }
+/* Unread count badge — pinned to the bell's outer top corner. */
+.notif-badge {
+  position: absolute; top: -3px; inset-inline-end: -3px;
+  min-width: 18px; height: 18px; padding: 0 4px;
+  border-radius: 999px;
+  background: var(--danger); color: #fff;
+  font-size: 11px; font-weight: 800; line-height: 18px; text-align: center;
+  box-shadow: 0 0 0 2px var(--paper);
+}
+.notif-panel {
+  position: absolute; top: calc(100% + 10px); inset-inline-end: 0;
+  width: min(360px, calc(100vw - 32px));
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  z-index: 60;
+  overflow: hidden;
+  animation: notif-pop .14s ease;
+}
+@keyframes notif-pop { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+.notif-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+}
+.notif-title { font-weight: 800; font-size: 15px; }
+.notif-markall {
+  border: none; background: none; cursor: pointer;
+  color: var(--brand); font-size: 12.5px; font-weight: 700; padding: 4px 6px; border-radius: 7px;
+}
+.notif-markall:hover { background: var(--brand-soft); }
+.notif-broadcast { padding: 12px 14px; border-bottom: 1px solid var(--line); background: var(--surface-2); }
+.notif-broadcast-input {
+  width: 100%; resize: vertical; box-sizing: border-box;
+  border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+  background: var(--field-bg); color: var(--ink);
+  padding: 8px 10px; font: inherit; font-size: 13px; margin-bottom: 8px;
+}
+.notif-broadcast-send { font-size: 13px; padding: 8px 12px; }
+.notif-list { max-height: 380px; overflow-y: auto; }
+.notif-item {
+  display: block; width: 100%; text-align: start;
+  padding: 12px 14px; border-bottom: 1px solid var(--line);
+  border-inline-start: 3px solid transparent;
+}
+.notif-item:last-child { border-bottom: none; }
+.notif-item.is-unread { background: var(--brand-soft); border-inline-start-color: var(--brand); }
+[data-theme="dark"] .notif-item.is-unread { background: rgba(var(--brand-rgb), .16); }
+.notif-item-title { font-weight: 700; font-size: 13.5px; margin: 0 0 3px; }
+.notif-item-msg { font-size: 12.5px; color: var(--ink-soft); line-height: 1.5; margin: 0; }
+.notif-item-time { font-size: 11px; color: var(--ink-faint); margin-top: 4px; display: block; }
+.notif-empty { padding: 26px 14px; text-align: center; color: var(--ink-faint); font-size: 13px; }
+
+/* ============================================================
+   LOGIN
+   ============================================================ */
+.login-view {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 40px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.login-aurora {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(620px 420px at 78% 22%, rgba(var(--brand-rgb),.16), transparent 62%),
+    radial-gradient(560px 460px at 18% 84%, rgba(184,138,62,.18), transparent 60%);
+  animation: drift 18s ease-in-out infinite alternate;
+}
+@keyframes drift { to { transform: translate3d(-18px, 14px, 0) scale(1.04); } }
+
+.login-card {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 430px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 36px 34px 30px;
+  box-shadow: var(--shadow-lg);
+  animation: rise .6s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes rise { from { opacity: 0; transform: translateY(18px); } }
+
+.login-brand { display: flex; align-items: center; gap: 14px; margin-bottom: 26px; }
+.login-cross {
+  flex: none;
+  width: 56px; height: 56px; border-radius: 16px;
+  display: grid; place-items: center;
+  background: linear-gradient(160deg, var(--brand), var(--brand-deep));
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(var(--brand-rgb),.32);
+}
+.login-brand h1 { font-size: 23px; line-height: 1.15; }
+.login-brand p { margin: 3px 0 0; color: var(--ink-faint); font-size: 13.5px; }
+
+.login-form { display: grid; gap: 15px; animation: authfade .28s ease both; }
+/* A hidden auth form must stay fully removed — the display:grid above would
+   otherwise override the user-agent [hidden] rule and show both forms at once. */
+.login-form[hidden] { display: none; }
+@keyframes authfade { from { opacity: 0; transform: translateY(6px); } }
+.field { display: grid; gap: 6px; }
+/* The display:grid above would otherwise override the user-agent [hidden] rule
+   and keep conditionally-hidden fields (e.g. the specific-trainee picker) visible. */
+.field[hidden] { display: none; }
+.field > span { font-size: 13px; font-weight: 600; color: var(--ink-soft); }
+.field input {
+  font-family: var(--body);
+  font-size: 15px;
+  padding: 12px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--ink);
+  transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+}
+.field input:focus {
+  outline: none;
+  border-color: var(--brand);
+  background: var(--field-bg);
+  box-shadow: 0 0 0 4px var(--brand-soft);
+}
+.login-error {
+  margin: 0; padding: 10px 12px;
+  background: var(--danger-soft); color: var(--danger-deep);
+  border-radius: var(--radius-sm); font-size: 13.5px; font-weight: 500;
+}
+.login-notice {
+  margin: 0; padding: 10px 12px;
+  background: var(--ok-soft); color: var(--ok);
+  border-radius: var(--radius-sm); font-size: 13.5px; font-weight: 600;
+}
+.login-switch { margin: 2px 0 0; text-align: center; font-size: 13.5px; color: var(--ink-faint); }
+.link-btn {
+  background: none; border: none; padding: 0;
+  font-family: inherit; font-size: 13.5px; font-weight: 700;
+  color: var(--brand); cursor: pointer; text-decoration: underline;
+}
+.link-btn:hover { color: var(--brand-deep); }
+
+/* Forgot-password link sits under the login fields, end-aligned (RTL-aware). */
+.login-forgot { margin: -6px 0 0; text-align: start; }
+.login-forgot .link-btn { font-size: 13px; font-weight: 600; }
+
+/* Intro header for the forgot / reset / verify auth panels. */
+.login-form-intro { display: grid; gap: 4px; margin-bottom: 4px; }
+.login-form-title { font-size: 19px; line-height: 1.2; }
+.login-form-sub { margin: 0; color: var(--ink-faint); font-size: 13.5px; line-height: 1.55; }
+.login-form-sub.is-ok { color: var(--ok); font-weight: 600; }
+.login-form-sub.is-err { color: var(--danger-deep); font-weight: 600; }
+.login-verify { gap: 18px; }
+
+/* Email-verification status pill in the user-management tables. */
+.u-email-addr { display: inline-block; }
+.verify-pill {
+  display: inline-block; margin-inline-start: 8px;
+  padding: 1px 8px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; white-space: nowrap;
+  vertical-align: middle;
+}
+.verify-pill.is-verified { background: var(--ok-soft); color: var(--ok); }
+.verify-pill.is-unverified { background: var(--gold-soft); color: var(--gold); }
+
+/* ============================================================
+   APP SHELL
+   ============================================================ */
+.app-view { min-height: 100%; display: flex; flex-direction: column; }
+/* When logged out the app shell (topbar, nav, panels) must stay fully removed.
+   The display:flex above would otherwise override the user-agent [hidden] rule
+   and leave the navigation bar visible behind the login screen. */
+.app-view[hidden] { display: none; }
+
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between; gap: 22px;
+  padding: 12px 26px;
+  background: rgba(255,253,248,.86);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
+}
+/* Admin "view as" banner — pinned to the very top, sits above the topbar.
+   The whole bar is a clickable button that exits impersonation. */
+.impersonation-banner {
+  position: sticky; top: 0; z-index: 60;
+  display: block; width: 100%;
+  border: 0; border-bottom: 1px solid rgba(0,0,0,.15);
+  padding: 11px 26px;
+  font-family: var(--body); font-size: 14px; font-weight: 700;
+  text-align: center; line-height: 1.35;
+  color: #fff; cursor: pointer;
+  background: linear-gradient(180deg, var(--brand), var(--brand-deep));
+  box-shadow: var(--shadow-sm);
+  transition: filter .15s ease;
+}
+.impersonation-banner:hover { filter: brightness(1.07); }
+.impersonation-banner[hidden] { display: none; }
+/* While impersonating, drop the sticky topbar below the banner so both stay
+   visible when scrolling. */
+body.imp-active .topbar { top: 44px; }
+.topbar-brand { display: flex; align-items: center; gap: 10px; flex: none; margin-inline-end: 16px; }
+.topbar-cross {
+  display: grid; place-items: center;
+  background: transparent;
+}
+.topbar-logo { display: block; }
+.topbar-title { font-family: var(--display); font-weight: 700; font-size: 18px; }
+
+/* The middle tabs are the only elastic section: they may shrink and scroll
+   horizontally so the brand and the left action cluster are never clipped. */
+.main-nav {
+  display: flex; gap: 6px; flex: 1 1 auto;
+  min-width: 0; overflow-x: auto;
+  scrollbar-width: none;
+}
+.main-nav::-webkit-scrollbar { display: none; }
+.nav-submenu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.nav-submenu-children {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.nav-tab {
+  border: none; background: transparent; flex: none;
+  padding: 9px 16px; border-radius: 999px;
+  font-size: 14.5px; font-weight: 600; color: var(--ink-soft);
+  white-space: nowrap;
+  transition: background .18s ease, color .18s ease;
+}
+.nav-subtab {
+  background: var(--surface-2);
+  font-size: 13px;
+  padding: 8px 12px;
+}
+.nav-tab:hover { background: var(--surface-2); color: var(--ink); }
+.nav-tab.is-active { background: var(--brand); color: #fff; }
+
+/* Mobile navigation dropdown — hidden on desktop, revealed under 768px where the
+   wide tab strip is suppressed (see the media query at the end of this file). */
+.nav-mobile-select { display: none; }
+
+.topbar-user { display: flex; align-items: center; gap: 14px; flex: none; flex-shrink: 0; }
+.user-meta { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2; }
+.user-name { font-weight: 600; font-size: 14px; }
+.role-badge {
+  font-size: 11px; font-weight: 700; letter-spacing: .02em;
+  padding: 2px 9px; border-radius: 999px; margin-top: 2px;
+}
+.role-badge.admin { background: var(--brand-soft); color: var(--brand-deep); }
+.role-badge.viewer { background: var(--gold-soft); color: var(--gold); }
+
+.tab-panel { flex: 1; width: 100%; max-width: 1120px; margin: 0 auto; padding: 30px 26px 60px; }
+
+.page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 24px; flex-wrap: wrap; }
+.page-title { font-size: 28px; font-weight: 900; }
+.page-sub { margin: 4px 0 0; color: var(--ink-faint); font-size: 14px; }
+
+.month-nav { display: flex; align-items: center; gap: 14px; }
+.month-label { font-family: var(--display); font-weight: 700; font-size: 20px; min-width: 150px; text-align: center; }
+
+/* ---------- Calendar ---------- */
+.calendar-wrap {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+}
+.calendar-weekdays, .calendar-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
+}
+.calendar-weekdays { margin-bottom: 8px; }
+.calendar-weekdays span {
+  text-align: center; font-size: 12.5px; font-weight: 700;
+  color: var(--ink-faint); padding: 4px 0; letter-spacing: .03em;
+}
+
+.day-cell {
+  position: relative;
+  min-height: 78px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  text-align: start;
+  font-family: var(--body);
+  color: var(--ink);
+  transition: transform .12s ease, border-color .15s ease, box-shadow .18s ease, background .15s ease;
+}
+.day-cell:hover { transform: translateY(-2px); border-color: var(--brand); box-shadow: var(--shadow-md); background: var(--surface); }
+.day-cell.is-empty { background: transparent; border-color: transparent; pointer-events: none; }
+.day-cell.is-today { border-color: var(--gold); }
+.day-cell.is-today .day-num { color: var(--gold); }
+.day-cell.is-selected { background: var(--brand); border-color: var(--brand); color: #fff; box-shadow: var(--shadow-md); }
+.day-cell.is-selected .day-num { color: #fff; }
+.day-num { font-family: var(--display); font-weight: 700; font-size: 19px; line-height: 1; }
+.day-flag {
+  position: absolute; inset-inline-end: 9px; bottom: 8px;
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 10.5px; font-weight: 600; color: var(--brand);
+}
+.day-cell.is-selected .day-flag { color: var(--gold-soft); }
+.day-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--brand); }
+.day-cell.is-selected .day-dot { background: var(--gold); }
+
+/* ---------- Locked day (trainee, outside the published week) ---------- */
+.day-cell.is-locked {
+  cursor: not-allowed;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--surface-2),
+    var(--surface-2) 7px,
+    var(--line) 7px,
+    var(--line) 8px
+  );
+  border-style: dashed;
+  border-color: var(--line);
+  color: var(--ink-faint);
+}
+.day-cell.is-locked:hover { transform: none; box-shadow: none; border-color: var(--line); }
+.day-cell.is-locked .day-num { color: var(--ink-faint); opacity: .7; }
+.day-locked-note {
+  display: block;
+  margin-top: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ink-faint);
+}
+
+/* ---------- Day-cell shift preview (assigned names) ---------- */
+.day-preview {
+  margin-top: 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.day-shift {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0; /* allow the names label to shrink + ellipsis */
+}
+.day-shift-band {
+  flex: none;
+  width: 4px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--ink-faint);
+}
+.day-shift.night .day-shift-band { background: #3b3a6b; }
+.day-shift.morning .day-shift-band { background: var(--gold); }
+.day-shift.evening .day-shift-band { background: var(--teal); }
+.day-shift-names {
+  min-width: 0;
+  font-size: 10.5px;
+  line-height: 1.3;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.day-cell.is-selected .day-shift-names { color: rgba(255, 255, 255, .92); }
+
+/* Shift-note flag — a small red indicator shown wherever a shift carries admin
+   guidance (calendar preview, day-detail card head, and the "My Shifts" table).
+   Its title/aria-label carries the note text so hovering or focusing reveals it. */
+.shift-note-flag {
+  flex: none;
+  font-size: 11px;
+  line-height: 1;
+  cursor: help;
+  filter: drop-shadow(0 0 1px rgba(200, 30, 30, .35));
+}
+.shift-card-head .shift-note-flag {
+  font-size: 13px;
+  margin-inline-start: 4px;
+  vertical-align: middle;
+}
+.shift-note-flag:focus-visible {
+  outline: 2px solid var(--teal, #2aa);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+.day-cell.is-selected .day-shift.night .day-shift-band,
+.day-cell.is-selected .day-shift.morning .day-shift-band,
+.day-cell.is-selected .day-shift.evening .day-shift-band { background: var(--gold-soft); }
+
+/* ---------- Day detail / shift tables ---------- */
+.day-detail {
+  margin-top: 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  /* overflow stays visible so the blue day header below can pin itself to the
+     viewport (position: sticky) while the shift cards scroll under it; an
+     overflow-clipping ancestor would trap the sticky header inside this card. */
+  overflow: visible;
+  animation: rise .35s ease both;
+}
+.detail-head {
+  /* The active-day action bar: pinned just beneath the sticky topbar so the
+     full date and its controls stay put — and never drift horizontally — while
+     the day's shifts scroll. --stuck-top is published from JS as the live
+     topbar (+ impersonation banner) height. */
+  position: sticky;
+  top: var(--stuck-top, 64px);
+  z-index: 30;
+  border-start-start-radius: var(--radius);
+  border-start-end-radius: var(--radius);
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 18px 22px;
+  background: linear-gradient(120deg, var(--brand-deep), var(--brand));
+  color: #fff; flex-wrap: wrap;
+}
+.detail-head h3 { font-size: 21px; color: #fff; }
+.detail-head .detail-sub { font-size: 13px; opacity: .85; margin-top: 2px; }
+.detail-actions { display: flex; align-items: center; gap: 12px; }
+/* Auto-save status pill — sits in the day-board header (light text on the brand
+   gradient) and reports the live save state in place of the old manual button. */
+.autosave-status {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 6px 12px; border-radius: 999px;
+  font-size: 13px; font-weight: 600; line-height: 1;
+  background: rgba(255,255,255,.16);
+  border: 1px solid rgba(255,255,255,.28);
+  color: #fff;
+  transition: background .2s ease, border-color .2s ease, color .2s ease;
+}
+.autosave-status[hidden] { display: none; }
+.autosave-status.is-saved {
+  background: var(--ok-soft); border-color: transparent; color: var(--ok);
+}
+.autosave-status.is-error {
+  background: #fdecec; border-color: transparent; color: #b22; font-weight: 700;
+}
+.autosave-status svg { flex: 0 0 auto; }
+.autosave-spinner {
+  width: 13px; height: 13px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.45);
+  border-top-color: #fff;
+  animation: autosave-spin .7s linear infinite;
+}
+@keyframes autosave-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .autosave-spinner { animation-duration: 2.4s; }
+}
+.btn-close-detail {
+  background: rgba(255,255,255,.15); color: #fff; border: 1px solid rgba(255,255,255,.3);
+}
+.btn-close-detail:hover { background: rgba(255,255,255,.28); }
+
+.shifts { padding: 20px 22px 26px; display: grid; gap: 18px; }
+.shift-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--surface-2);
+}
+.shift-card-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+.shift-band { width: 6px; height: 22px; border-radius: 3px; }
+.shift-band.morning { background: var(--gold); }
+.shift-band.evening { background: var(--teal); }
+.shift-band.night { background: #3b3a6b; }
+.shift-name { font-family: var(--display); font-weight: 700; font-size: 16px; }
+.shift-time { color: var(--ink-faint); font-size: 12.5px; direction: ltr; }
+
+/* ---------- Day-detail shift accordion (mobile-first, light) ----------
+   Tapping a day no longer dumps the whole crew matrix. Instead the day opens as
+   three wide, clean trigger buttons — Night → Morning → Evening — each of which
+   expands only its own shifts. Light surfaces + the branded burgundy accents
+   keep it readable on a phone. */
+.shift-acc {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+.shift-acc.is-open {
+  border-color: rgba(var(--danger-rgb), .45);
+  box-shadow: var(--shadow-md);
+}
+.shift-acc-trigger {
+  width: 100%;
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 18px;
+  background: var(--surface);
+  border: none; cursor: pointer; text-align: start;
+  font-family: var(--body);
+  color: var(--ink);
+  transition: background .15s ease;
+}
+.shift-acc-trigger:hover { background: rgba(var(--danger-rgb), .05); }
+.shift-acc-trigger:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px rgba(var(--danger-rgb), .45);
+}
+/* Leading colour band marks which time-of-day the button opens. */
+.shift-acc-band { width: 6px; height: 30px; border-radius: 3px; flex: none; }
+.shift-acc-band.morning { background: var(--gold); }
+.shift-acc-band.evening { background: var(--teal); }
+.shift-acc-band.night   { background: #3b3a6b; }
+.shift-acc-title {
+  font-family: var(--display); font-weight: 700; font-size: 18px;
+  color: var(--ink);
+}
+/* Count pill in the branded burgundy so the button reads as a system control. */
+.shift-acc-count {
+  font-size: 12.5px; font-weight: 600;
+  padding: 3px 10px; border-radius: 999px;
+  background: var(--danger-soft); color: var(--danger);
+  white-space: nowrap;
+}
+.shift-acc-chevron {
+  margin-inline-start: auto; flex: none;
+  color: var(--danger);
+  transition: transform .25s ease;
+}
+.shift-acc.is-open .shift-acc-chevron { transform: rotate(180deg); }
+
+/* Smooth open/close that works for any content height (no fixed max-height). */
+.shift-acc-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows .28s ease;
+  border-top: 1px solid transparent;
+}
+.shift-acc.is-open .shift-acc-body {
+  grid-template-rows: 1fr;
+  border-top-color: var(--line);
+}
+.shift-acc-inner { overflow: hidden; min-height: 0; }
+.shift-acc-inner { display: grid; gap: 14px; padding: 14px; background: var(--surface-2); }
+/* Inside a section every card is already scoped to one time-of-day. Sit the cards
+   on white against the cream section body so crew names read cleanly on mobile. */
+.shift-acc-inner .shift-card { box-shadow: none; background: var(--surface); }
+.shift-acc-inner .shift-card-head { background: var(--surface-2); }
+@media (prefers-reduced-motion: reduce) {
+  .shift-acc-body, .shift-acc-chevron { transition: none; }
+}
+
+/* Per-day shift removal (admin): delete button on the card header + the
+   restore panel listing whatever was removed from this specific day. */
+.btn-shift-del {
+  margin-inline-start: auto; /* push to the header's end edge */
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 10px; font-family: var(--body); font-size: 12.5px; font-weight: 600;
+  border-radius: var(--radius-sm); border: 1px solid var(--line-strong);
+  background: var(--field-bg); color: var(--danger); cursor: pointer;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+.btn-shift-del:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
+.btn-shift-del svg { flex: none; }
+
+/* "הוסף ליומן גוגל" export control — full (icon + label) in the "המשמרות שלי"
+   table, and an icon-only compact variant inside the board grid cells. */
+.gcal-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 10px; border-radius: var(--radius-sm);
+  border: 1px solid var(--line-strong); background: var(--field-bg);
+  color: var(--brand); cursor: pointer; text-decoration: none;
+  font-family: var(--body); font-size: 12.5px; font-weight: 600;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+.gcal-link:hover { background: var(--brand); color: #fff; border-color: var(--brand); }
+.gcal-link svg { flex: none; }
+.gcal-link-compact {
+  padding: 4px; border-radius: 999px; margin-inline-start: 4px;
+  align-self: center; line-height: 0;
+}
+.forms-cal { white-space: nowrap; }
+
+.hidden-shifts {
+  margin-top: 16px; padding: 14px 16px;
+  border: 1px dashed var(--line-strong); border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+.hidden-shifts-head { font-size: 13px; font-weight: 700; color: var(--ink-soft); margin-bottom: 10px; }
+.hidden-shifts-list { display: flex; flex-wrap: wrap; gap: 10px; }
+.hidden-chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 8px 6px 10px; border-radius: var(--radius-sm);
+  border: 1px solid var(--line); background: var(--surface-2);
+}
+.hidden-chip .shift-band { height: 16px; }
+.hidden-chip-label { font-size: 13px; color: var(--ink); }
+.btn-restore-shift {
+  font-family: var(--body); font-size: 12px; font-weight: 600;
+  padding: 4px 10px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--brand); background: transparent; color: var(--brand);
+  transition: background .15s ease, color .15s ease;
+}
+.btn-restore-shift:hover { background: var(--brand); color: #fff; }
+
+/* Per-day custom shift: a one-off station added from the day view. A tinted
+   header band + small tag set it apart from the permanent stations. */
+.shift-card.is-custom { border-style: dashed; border-color: var(--line-strong); }
+.shift-card.is-custom .shift-card-head { background: rgba(var(--brand-rgb), .10); }
+.shift-custom-tag {
+  display: inline-flex; align-items: center;
+  padding: 3px 9px; border-radius: 999px;
+  font-size: 11.5px; font-weight: 700; letter-spacing: .01em;
+  color: var(--brand); background: var(--surface);
+  border: 1px solid var(--brand);
+}
+
+/* "Add a custom shift to this day" form, anchored at the bottom of the day view. */
+.add-shift-card {
+  margin-top: 18px; padding: 16px 18px;
+  border: 1px dashed var(--line-strong); border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+.add-shift-head { display: flex; flex-direction: column; gap: 2px; margin-bottom: 14px; }
+.add-shift-head h4 { font-family: var(--display); font-size: 16px; font-weight: 700; margin: 0; }
+.add-shift-sub { font-size: 12.5px; color: var(--ink-soft); }
+.add-shift-form {
+  display: grid; gap: 14px; align-items: end;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) auto;
+}
+.add-shift-field { display: grid; gap: 6px; }
+.add-shift-field label { font-size: 12.5px; font-weight: 600; color: var(--ink-soft); }
+.add-shift-field input, .add-shift-field select {
+  font-family: var(--body); font-size: 14px;
+  padding: 10px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--field-bg); color: var(--ink);
+  transition: border-color .15s ease, box-shadow .15s ease;
+  width: 100%;
+}
+.add-shift-field input:focus, .add-shift-field select:focus {
+  outline: none; border-color: var(--brand);
+  box-shadow: 0 0 0 4px var(--brand-soft);
+}
+/* Time fields are inherently left-to-right (HH:MM). Without this the RTL page
+   direction cascades in and the browser reverses the hour/minute segments, so a
+   "22:00" start renders as "00:22". Force LTR so the value reads correctly while
+   the label stays right-aligned with the rest of the RTL form. */
+.add-shift-field input[type="time"] { direction: ltr; text-align: start; }
+.add-shift-foot { display: flex; }
+.add-shift-foot .btn { white-space: nowrap; }
+@media (max-width: 560px) {
+  .add-shift-form { grid-template-columns: 1fr; }
+}
+
+
+.slot-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 14px; padding: 16px;
+}
+.slot { display: grid; gap: 6px; }
+.slot > label { font-size: 12.5px; font-weight: 600; color: var(--ink-soft); display: flex; align-items: center; gap: 6px; }
+.slot-role-dot { width: 8px; height: 8px; border-radius: 50%; }
+.slot-role-dot.driver { background: var(--teal); }
+.slot-role-dot.medic { background: var(--danger); }
+.slot-role-dot.intern { background: var(--gold); }
+
+.slot select, .slot input {
+  font-family: var(--body); font-size: 14px;
+  padding: 10px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--field-bg); color: var(--ink);
+  transition: border-color .15s ease, box-shadow .15s ease;
+  width: 100%;
+}
+.slot select:focus, .slot input:focus {
+  outline: none; border-color: var(--brand);
+  box-shadow: 0 0 0 4px var(--brand-soft);
+}
+/* read-only / disabled state — visually distinct, clearly non-interactive */
+.slot select:disabled, .slot input:disabled,
+.users-table select:disabled {
+  background: var(--surface-2);
+  color: var(--ink-soft);
+  cursor: not-allowed;
+  border-style: dashed;
+  opacity: 1;
+}
+
+/* ---------- Users table ---------- */
+.table-card {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm);
+}
+.users-table { width: 100%; border-collapse: collapse; }
+.users-table th, .users-table td {
+  text-align: start; padding: 14px 20px; font-size: 14.5px;
+  border-bottom: 1px solid var(--line);
+}
+.users-table th { background: var(--surface-2); font-weight: 700; color: var(--ink-soft); font-size: 13px; letter-spacing: .02em; }
+.users-table tr:last-child td { border-bottom: none; }
+.users-table tr:hover td { background: var(--surface-2); }
+.users-table .u-email { direction: ltr; text-align: start; color: var(--ink-soft); }
+.users-table select {
+  font-family: var(--body); font-size: 13.5px; font-weight: 600;
+  padding: 8px 12px; border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm); background: var(--field-bg); color: var(--ink);
+}
+.users-table select:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 4px var(--brand-soft); }
+.you-tag { font-size: 11px; font-weight: 700; color: var(--gold); margin-inline-start: 8px; }
+
+/* ---------- Access status + row actions ---------- */
+.status-badge {
+  font-size: 11px; font-weight: 700; letter-spacing: .02em;
+  padding: 3px 10px; border-radius: 999px; display: inline-block;
+}
+.status-badge.approved { background: var(--ok-soft); color: var(--ok); }
+.status-badge.pending { background: var(--gold-soft); color: var(--gold); }
+.users-table td .muted { color: var(--ink-faint); }
+
+/* ---------- Per-trainee shift target (admin) ---------- */
+/* Compact numeric input in the users table for each trainee's personal target. */
+.target-input {
+  width: 72px;
+  padding: 6px 8px;
+  font: inherit;
+  font-weight: 600;
+  text-align: center;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.target-input:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-soft, rgba(44,107,63,.18));
+}
+
+/* Live shift counter badge: "current / target משמרות", colour-coded per trainee. */
+.quota-badge {
+  display: inline-block; white-space: nowrap;
+  font-size: 12px; font-weight: 700; letter-spacing: .02em;
+  padding: 3px 11px; border-radius: 999px;
+}
+.quota-badge.ok      { background: var(--ok-soft); color: var(--ok); }       /* met / exceeded */
+.quota-badge.low     { background: var(--gold-soft); color: var(--gold); }   /* below target */
+.quota-badge.neutral { background: var(--surface-2); color: var(--ink-soft); border: 1px solid var(--line); }
+.empty-row { text-align: center; color: var(--ink-faint); font-style: italic; padding: 22px; }
+
+.row-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.btn-xs {
+  font-family: var(--body); font-size: 12.5px; font-weight: 600;
+  padding: 6px 12px; border-radius: var(--radius-sm);
+  border: 1px solid var(--line-strong); background: var(--field-bg); color: var(--ink-soft);
+  transition: background .15s ease, color .15s ease, border-color .15s ease, opacity .15s ease;
+}
+.btn-xs:disabled { opacity: .4; cursor: not-allowed; }
+.btn-approve { border-color: var(--ok); color: var(--ok); }
+.btn-approve:not(:disabled):hover { background: var(--ok); color: #fff; }
+.btn-block-user { border-color: var(--danger); color: var(--danger); }
+.btn-block-user:not(:disabled):hover { background: var(--danger); color: #fff; }
+.btn-edit-name { border-color: var(--brand); color: var(--brand); }
+.btn-edit-name:not(:disabled):hover { background: var(--brand); color: #fff; }
+.btn-impersonate { border-color: var(--brand-deep); color: var(--brand-deep); }
+.btn-impersonate:not(:disabled):hover { background: var(--brand-deep); color: #fff; }
+
+/* User-row actions dropdown — a single compact trigger that opens a floating
+   menu. The menu is body-appended and fixed-positioned (see openActionsMenu),
+   so it layers above rows without expanding the row height or being clipped. */
+.actions-menu-wrap { display: inline-flex; align-items: center; gap: 6px; }
+
+/* "שליחה מחדש" — resend activation email, shown inline on pending rows. Brand-
+   coloured by default; flips green while confirming a successful send. */
+.resend-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  border-color: var(--brand); color: var(--brand); white-space: nowrap;
+}
+.resend-btn:not(:disabled):hover { background: var(--brand); color: #fff; }
+.resend-btn .resend-ic { display: inline-flex; }
+.resend-btn.is-sending { opacity: .6; cursor: progress; }
+.resend-btn.is-sent {
+  border-color: var(--ok); color: var(--ok); background: transparent; opacity: 1;
+}
+.actions-menu-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  border-color: var(--line-strong); color: var(--ink-soft);
+}
+.actions-menu-btn:not(:disabled):hover { background: var(--surface-2); border-color: var(--brand); color: var(--brand); }
+.actions-menu-chev { display: inline-flex; transition: transform .15s ease; }
+.actions-menu-btn[aria-expanded="true"] {
+  background: var(--surface-2); border-color: var(--brand); color: var(--brand);
+}
+.actions-menu-btn[aria-expanded="true"] .actions-menu-chev { transform: rotate(180deg); }
+
+.actions-menu {
+  position: fixed; z-index: 1200; min-width: 190px;
+  background: var(--surface); border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm); box-shadow: var(--shadow-md);
+  padding: 6px; display: flex; flex-direction: column; gap: 2px;
+}
+.actions-menu-item {
+  display: block; width: 100%; text-align: start;
+  font-family: var(--body); font-size: 13px; font-weight: 600;
+  padding: 8px 12px; border-radius: 8px;
+  border: 0; background: transparent; color: var(--ink-soft); cursor: pointer;
+  transition: background .13s ease, color .13s ease;
+}
+.actions-menu-item:hover { background: var(--surface-2); color: var(--ink); }
+.actions-menu-item:disabled { opacity: .4; cursor: not-allowed; }
+.actions-menu-item.is-ok { color: var(--ok); }
+.actions-menu-item.is-ok:not(:disabled):hover { background: var(--ok-soft); }
+.actions-menu-item.is-brand { color: var(--brand); }
+.actions-menu-item.is-brand:not(:disabled):hover { background: var(--brand-soft); }
+.actions-menu-item.is-danger { color: var(--danger); }
+.actions-menu-item.is-danger:not(:disabled):hover { background: var(--danger-soft); }
+
+.btn-trash {
+  width: 36px; height: 36px; padding: 0; display: grid; place-items: center;
+  border-radius: var(--radius-sm); border: 1px solid var(--line-strong);
+  background: var(--field-bg); color: var(--danger);
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+.btn-trash:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
+
+.shift-pill { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; }
+.shift-pill .dot { width: 11px; height: 11px; border-radius: 3px; flex: none; }
+.shift-pill .dot.morning { background: var(--gold); }
+.shift-pill .dot.evening { background: var(--teal); }
+.shift-pill .dot.night { background: #3b3a6b; }
+
+/* ---------- Forms checklist tab ---------- */
+.forms-toolbar {
+  display: flex; flex-wrap: wrap; align-items: end; gap: 14px;
+  margin-bottom: 18px;
+}
+.forms-toolbar .field { min-width: 170px; }
+.forms-toolbar .forms-search { flex: 1 1 280px; }
+.forms-trainee-field { min-width: 190px; }
+.forms-table .forms-date { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.forms-table tr.is-done td { background: var(--ok-soft); }
+.forms-table tr.is-done:hover td { background: var(--ok-soft); }
+
+.form-check {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-size: 13.5px; font-weight: 600; color: var(--ink-soft); cursor: pointer;
+}
+.form-check input { width: 18px; height: 18px; accent-color: var(--ok); cursor: pointer; }
+.form-check .form-check-text { user-select: none; }
+.form-check.is-locked { cursor: not-allowed; color: var(--ink-faint); }
+.form-check.is-locked input { cursor: not-allowed; }
+.forms-table tr.is-done .form-check .form-check-text { color: var(--ok); }
+
+/* Form-tracking dashboard (5 collapsible time buckets). */
+.tracking-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.tracking-group-card {
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+}
+.tracking-group-head {
+  width: 100%;
+  border: 0;
+  background: rgba(14, 22, 37, .36);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px;
+  text-align: start;
+  cursor: pointer;
+}
+.tracking-group-head:hover { background: rgba(14, 22, 37, .48); }
+.tracking-group-meta {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tracking-group-title-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.tracking-group-title {
+  margin: 0;
+  font-size: 26px;
+  line-height: 1.1;
+  font-family: var(--display);
+  font-weight: 700;
+}
+.tracking-group-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 34px;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: #d9f3de;
+  color: #1a5d33;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1;
+}
+.tracking-group-sub {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.tracking-group-chevron {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  display: inline-grid;
+  place-items: center;
+  color: var(--ink-soft);
+  background: var(--surface);
+  transition: transform .18s ease, background-color .18s ease, color .18s ease;
+}
+.tracking-group-chevron.is-open { transform: rotate(180deg); }
+.tracking-group-head:hover .tracking-group-chevron {
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+.tracking-group-body {
+  padding: 0 16px 16px;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity .18s ease, transform .18s ease;
+}
+.tracking-group-body.is-open {
+  opacity: 1;
+  transform: translateY(0);
+}
+.tracking-group-table-wrap {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--surface);
+}
+.tracking-group-table { margin: 0; }
+
+html[data-theme="dark"] .tracking-group-card {
+  border-color: #2c394b;
+  background: linear-gradient(180deg, #182233, #121b2a);
+}
+html[data-theme="dark"] .tracking-group-head {
+  background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0));
+}
+html[data-theme="dark"] .tracking-group-head:hover {
+  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.01));
+}
+html[data-theme="dark"] .tracking-group-sub { color: #9fb0c8; }
+html[data-theme="dark"] .tracking-group-table-wrap {
+  border-color: #2c394b;
+  background: #0f1724;
+}
+
+@media (max-width: 700px) {
+  .tracking-group-head { padding: 14px; }
+  .tracking-group-title { font-size: 22px; }
+  .tracking-group-count {
+    min-width: 30px;
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+  }
+}
+
+/* Secondary "לא נדרש טופס" toggle stacked under the completion checkbox in the
+   forms checklist (managers only). Muted accent so it reads as a side action. */
+.form-check-nr {
+  display: flex; margin-block-start: 7px; font-size: 12.5px; font-weight: 500;
+  color: var(--ink-faint);
+}
+.form-check-nr input { accent-color: var(--ink-soft); }
+
+/* Static "לא נדרש" label shown in place of the completion toggle when a row
+   needs no evaluation form (an event, or a slot flagged not-required). */
+.form-check-na {
+  font-size: 13.5px; font-weight: 600; color: var(--ink-faint); user-select: none;
+}
+
+/* Admin-only pending-form notice under a still-"טרם בוצע" row: days elapsed since
+   the shift and the paramedic who staffed it, so a manager can gauge staleness and
+   know whom to chase. Small, muted, stacked chips. */
+.forms-pending-note {
+  display: flex; flex-wrap: wrap; gap: 4px 10px;
+  margin-block-start: 7px; font-size: 12px; font-weight: 500;
+  color: var(--ink-faint);
+}
+.forms-pending-note .forms-pending-elapsed { font-weight: 600; color: var(--gold); }
+.forms-pending-note .forms-pending-medic { color: var(--ink-soft); }
+
+/* Missing-forms report section ("דוח טפסים חסרים"). */
+.missing-forms-section { margin-block-end: 1.5rem; }
+
+@media (max-width: 700px) {
+  .forms-toolbar { flex-direction: column; align-items: stretch; }
+  .forms-toolbar .field, .forms-toolbar .forms-search { min-width: 0; width: 100%; }
+}
+
+/* ---------- Station configuration form ---------- */
+.station-form-card {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow-sm);
+  margin-bottom: 22px;
+}
+.station-form {
+  display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 14px; align-items: end;
+}
+.roster-form { grid-template-columns: 1fr auto; }
+.station-form .field { display: grid; gap: 6px; }
+.station-form .field > span { font-size: 13px; font-weight: 600; color: var(--ink-soft); }
+.station-form input, .station-form select {
+  font-family: var(--body); font-size: 14px; padding: 11px 13px;
+  border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+  background: var(--surface-2); color: var(--ink); width: 100%;
+}
+.station-form input:focus, .station-form select:focus {
+  outline: none; border-color: var(--brand); background: var(--field-bg);
+  box-shadow: 0 0 0 4px var(--brand-soft);
+}
+.shifts-empty {
+  margin: 0; padding: 22px; text-align: center;
+  color: var(--ink-faint); font-size: 14px;
+}
+@media (max-width: 700px) {
+  .station-form { grid-template-columns: 1fr; }
+  .station-form .btn-primary { width: 100%; }
+}
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed; inset-block-end: 26px; inset-inline-start: 50%;
+  transform: translate(-50%, 14px);
+  z-index: 100;
+  background: var(--ink); color: var(--surface);
+  padding: 13px 22px; border-radius: 999px;
+  font-size: 14px; font-weight: 600;
+  box-shadow: var(--shadow-lg);
+  display: flex; align-items: center; gap: 10px;
+  opacity: 0; pointer-events: none;
+  transition: opacity .25s ease, transform .25s ease;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+.toast.ok { background: var(--ok); }
+.toast-mark {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: rgba(255,255,255,.22); display: grid; place-items: center; font-size: 12px;
+}
+
+/* ---------- Availability lock configuration (admin) ---------- */
+.lock-config-card {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow-sm);
+  margin-bottom: 22px;
+}
+.lock-config-head h3 { font-size: 18px; }
+.lock-config-head .page-sub { margin-top: 4px; max-width: 70ch; }
+.lock-form {
+  display: grid; grid-template-columns: auto 1fr 1fr auto; gap: 14px; align-items: end;
+  margin-top: 16px;
+}
+.lock-form .field { display: grid; gap: 6px; }
+/* Keep conditionally-hidden lock-form fields (e.g. the specific-trainee picker)
+   hidden — the display:grid above sits later in the source than the general
+   .field[hidden] rule and would otherwise win and re-show them. */
+.lock-form .field[hidden] { display: none; }
+.lock-form .field > span { font-size: 13px; font-weight: 600; color: var(--ink-soft); }
+.lock-form input, .lock-form select {
+  font-family: var(--body); font-size: 14px; padding: 11px 13px;
+  border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+  background: var(--surface-2); color: var(--ink); width: 100%;
+}
+.lock-form input:focus, .lock-form select:focus {
+  outline: none; border-color: var(--brand); background: var(--field-bg);
+  box-shadow: 0 0 0 4px var(--brand-soft);
+}
+.lock-toggle {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 13.5px; font-weight: 600; color: var(--ink-soft);
+  padding-bottom: 11px; white-space: nowrap;
+}
+.lock-toggle input { width: 17px; height: 17px; accent-color: var(--brand); }
+@media (max-width: 700px) {
+  .lock-form { grid-template-columns: 1fr; }
+  .lock-form .btn-primary { width: 100%; }
+}
+
+/* Per-stage shift-target form on the admin dashboard: four number fields plus a
+   save button, laid out as a responsive grid and styled like the lock forms. */
+.stage-targets-form {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; align-items: end;
+  margin-top: 16px;
+}
+.stage-targets-form .field { display: grid; gap: 6px; }
+.stage-targets-form .field > span { font-size: 13px; font-weight: 600; color: var(--ink-soft); }
+.stage-targets-form input {
+  font-family: var(--body); font-size: 14px; padding: 11px 13px;
+  border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+  background: var(--surface-2); color: var(--ink); width: 100%;
+}
+.stage-targets-form input:focus {
+  outline: none; border-color: var(--brand); background: var(--field-bg);
+  box-shadow: 0 0 0 4px var(--brand-soft);
+}
+.stage-targets-form .btn-primary { grid-column: 1 / -1; justify-self: start; }
+@media (max-width: 700px) {
+  .stage-targets-form { grid-template-columns: 1fr 1fr; }
+  .stage-targets-form .btn-primary { width: 100%; }
+}
+
+/* ---------- Published-weeks list (trainee schedule visibility) ---------- */
+/* The publish form is a single week picker + a "publish" button. */
+.publish-config-card .lock-form {
+  grid-template-columns: 1fr auto;
+}
+.published-weeks-list {
+  list-style: none; margin: 18px 0 0; padding: 0;
+  display: grid; gap: 8px;
+}
+.published-week-item {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 14px; border: 1px solid var(--line);
+  border-radius: var(--radius-sm); background: var(--surface-2);
+}
+.published-week-label { font-size: 14px; font-weight: 600; color: var(--ink); }
+.published-empty { font-size: 13.5px; color: var(--ink-soft); }
+.btn-sm { padding: 7px 12px; font-size: 13px; }
+@media (max-width: 700px) {
+  .publish-config-card .lock-form { grid-template-columns: 1fr; }
+}
+
+/* ---------- Availability submission + matrix ---------- */
+.avail-card {
+  margin: 0; padding: 18px 22px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-2);
+}
+.avail-card-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.avail-card-head h4 { margin: 0; font-family: var(--display); font-weight: 700; font-size: 17px; }
+.avail-hint { font-size: 12.5px; color: var(--ink-faint); font-weight: 600; }
+.lock-pill {
+  font-size: 11px; font-weight: 700; letter-spacing: .02em;
+  padding: 3px 10px; border-radius: 999px;
+  background: var(--danger-soft); color: var(--danger-deep);
+}
+.lock-banner {
+  margin: 0 0 14px; padding: 11px 14px;
+  background: var(--danger-soft); color: var(--danger-deep);
+  border-radius: var(--radius-sm); font-size: 13.5px; font-weight: 600;
+}
+.avail-rows { display: grid; gap: 10px; }
+.avail-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  flex-wrap: wrap;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius-sm); padding: 10px 14px;
+}
+.avail-shift-name {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-weight: 600; font-size: 14px; color: var(--ink);
+}
+.avail-options { display: inline-flex; gap: 8px; flex-wrap: wrap; }
+.avail-opt {
+  font-family: var(--body); font-size: 13px; font-weight: 600;
+  padding: 7px 14px; border-radius: 999px;
+  border: 1px solid var(--line-strong); background: var(--field-bg); color: var(--ink-soft);
+  transition: background .15s ease, color .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+.avail-opt:not(:disabled):hover { border-color: var(--ink-faint); }
+.avail-opt:disabled { opacity: .55; cursor: not-allowed; }
+/* Night-shift restriction ("לא זמין למשמרות לילה"): the blocked availability row /
+   weekly cell is dimmed and captioned so the trainee sees why nights are off. */
+.avail-row.is-blocked .avail-options { opacity: .5; }
+.weekly-cell.is-blocked .weekly-opts { opacity: .5; }
+.avail-blocked-note { margin-inline-start: 8px; font-size: 12px; font-weight: 600; color: var(--danger); }
+.avail-opt.prefer.is-active { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); box-shadow: 0 0 0 3px rgba(44,107,63,.12); }
+.avail-opt.avoid.is-active  { background: var(--gold-soft); border-color: var(--gold); color: var(--gold); box-shadow: 0 0 0 3px rgba(184,138,62,.14); }
+.avail-opt.cannot.is-active { background: var(--danger-soft); border-color: var(--danger); color: var(--danger-deep); box-shadow: 0 0 0 3px rgba(var(--danger-rgb),.12); }
+.avail-foot { margin-top: 16px; display: flex; justify-content: flex-end; }
+
+.avail-empty { margin: 0; color: var(--ink-faint); font-size: 13.5px; font-style: italic; }
+.avail-matrix-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-sm); }
+.avail-matrix { width: 100%; border-collapse: collapse; background: var(--surface); }
+.avail-matrix th, .avail-matrix td {
+  text-align: start; padding: 10px 14px; font-size: 13.5px;
+  border-bottom: 1px solid var(--line);
+}
+.avail-matrix th { background: var(--surface-2); font-weight: 700; color: var(--ink-soft); font-size: 12.5px; }
+.avail-matrix tr:last-child td { border-bottom: none; }
+.avail-matrix-name { font-weight: 600; }
+.avail-cell {
+  display: inline-block; font-size: 12px; font-weight: 700;
+  padding: 3px 10px; border-radius: 999px;
+}
+.avail-cell.prefer { background: var(--ok-soft); color: var(--ok); }
+.avail-cell.avoid  { background: var(--gold-soft); color: var(--gold); }
+.avail-cell.cannot { background: var(--danger-soft); color: var(--danger-deep); }
+.avail-cell-empty { color: var(--ink-faint); }
+
+/* ---------- Weekly availability grid (trainees) ---------- */
+.weekly-view { width: 100%; }
+.weekly-week-pick { margin-block-end: 16px; max-width: 340px; }
+.weekly-week-pick .field { margin: 0; }
+.weekly-card {
+  border: 1px solid var(--line); border-radius: var(--radius);
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+.weekly-loading { color: var(--ink-faint); font-size: 14px; padding: 8px 2px; }
+.weekly-legend { display: flex; flex-wrap: wrap; gap: 14px; margin: 0 0 14px; }
+.weekly-legend-item {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 12.5px; font-weight: 600; color: var(--ink-soft);
+}
+.weekly-legend-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+.weekly-legend-item.prefer .weekly-legend-dot { background: var(--ok); }
+.weekly-legend-item.avoid  .weekly-legend-dot { background: var(--gold); }
+.weekly-legend-item.cannot .weekly-legend-dot { background: var(--danger); }
+
+.weekly-grid-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-sm); }
+.weekly-grid { width: 100%; border-collapse: collapse; background: var(--surface); }
+.weekly-grid th, .weekly-grid td {
+  text-align: center; padding: 10px 12px; border-bottom: 1px solid var(--line);
+  border-inline-end: 1px solid var(--line);
+}
+.weekly-grid th:last-child, .weekly-grid td:last-child { border-inline-end: none; }
+.weekly-grid tr:last-child td { border-bottom: none; }
+.weekly-grid thead th {
+  background: var(--surface-2); font-weight: 700; color: var(--ink-soft); font-size: 13px;
+  position: sticky; top: 0;
+}
+.weekly-grid thead th .shift-band { display: inline-block; vertical-align: middle; margin-inline-end: 7px; }
+.weekly-corner { text-align: start; }
+.weekly-day {
+  text-align: start; white-space: nowrap; background: var(--surface-2);
+  font-weight: 700; min-width: 92px;
+}
+.weekly-day-name { display: block; font-size: 14px; color: var(--ink); }
+.weekly-day-date { display: block; font-size: 12px; color: var(--ink-faint); font-weight: 600; }
+.weekly-cell { vertical-align: middle; }
+.weekly-opts { display: inline-flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.weekly-opts .avail-opt { padding: 6px 12px; }
+.weekly-foot { margin-top: 16px; }
+
+/* ---------- Smart trainee assignment (admin) ---------- */
+/* The slot's input shares its row with the "שבץ חניך" trigger. */
+.combo { display: flex; align-items: stretch; gap: 6px; }
+.combo .combo-input { flex: 1 1 auto; min-width: 0; }
+/* Time-released crew masking: the placeholder shown to trainees/viewers before
+   the reveal window reads as a muted, non-name hint rather than an assignment. */
+.combo-input.is-crew-masked {
+  font-style: italic;
+  color: var(--ink-faint);
+  background: var(--surface-2, rgba(127, 127, 127, .08));
+  text-align: start;
+}
+.btn-assign {
+  flex: 0 0 auto;
+  display: inline-flex; align-items: center; white-space: nowrap;
+  padding: 0 12px;
+  font-family: var(--body); font-size: 12.5px; font-weight: 600;
+  color: var(--brand-deep); background: var(--brand-soft);
+  border: 1px solid transparent; border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease;
+}
+.btn-assign:hover { background: var(--brand); color: #fff; }
+.btn-assign:focus-visible { outline: none; box-shadow: 0 0 0 4px var(--brand-soft); }
+
+/* Floating picker — fixed-positioned on <body> (the shift card clips overflow). */
+.assign-pop {
+  position: fixed; z-index: 200;
+  width: 290px; max-width: calc(100vw - 16px);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  animation: assignPop .12s ease;
+}
+@keyframes assignPop {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: none; }
+}
+.assign-pop-head {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 12px 14px;
+  background: var(--surface-2); border-bottom: 1px solid var(--line);
+}
+.assign-pop-titles { display: grid; gap: 2px; flex: 1 1 auto; min-width: 0; }
+.assign-pop-title { display: flex; align-items: center; gap: 7px; font-weight: 700; font-size: 13.5px; }
+.assign-pop-title .shift-band { height: 16px; }
+.assign-pop-sub { color: var(--ink-faint); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.assign-pop-x {
+  flex: 0 0 auto; border: none; background: transparent; cursor: pointer;
+  font-size: 20px; line-height: 1; color: var(--ink-faint); padding: 0 2px;
+}
+.assign-pop-x:hover { color: var(--ink); }
+.assign-pop-body { max-height: 320px; overflow-y: auto; padding: 8px; }
+
+/* "No form required" toggle. The base style is shared by the per-escort toggle
+   under each ambulance escort field on a daily shift card and by the editable
+   toggle inside the monthly matrix assignment picker. */
+.noform-toggle {
+  display: flex; align-items: center; gap: 8px; cursor: pointer;
+  font-size: 13px; font-weight: 600; color: var(--ink-soft);
+  padding: 8px 10px; border-radius: 9px;
+  background: var(--paper-2, #faf6ec); border: 1px dashed var(--line, #e2dac9);
+}
+.noform-toggle input { width: 16px; height: 16px; accent-color: var(--gold); cursor: pointer; flex: 0 0 auto; }
+.noform-toggle input:disabled { cursor: default; }
+
+/* Compact variant sitting directly beneath an escort (מלווה) field. */
+.noform-toggle-slot {
+  margin-top: 6px; padding: 6px 8px;
+  font-size: 11.5px; font-weight: 600; line-height: 1.3;
+}
+
+/* ---------- Task type (סוג המשימה) + trainee (משתלמים) list ---------- */
+/* The task-type selector sits at the top of a shift card, between its head and
+   the crew grid / trainee list it governs. */
+.task-type-row {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 12px 16px 0;
+}
+.task-type-row > label {
+  font-size: 12.5px; font-weight: 700; color: var(--ink-soft);
+}
+.task-type-select {
+  font-family: var(--body); font-size: 14px; font-weight: 600;
+  padding: 8px 12px;
+  border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+  background: var(--field-bg); color: var(--ink);
+  min-width: 190px;
+}
+.task-type-select:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 4px var(--brand-soft); }
+.task-type-select:disabled { background: var(--surface-2); color: var(--ink-soft); cursor: not-allowed; border-style: dashed; }
+
+/* Read-only badge shown to viewers on an event task, in place of the dropdown. */
+.task-type-badge {
+  display: inline-block; margin: 12px 16px 0;
+  padding: 5px 12px; border-radius: 999px;
+  font-size: 12px; font-weight: 700;
+  background: var(--brand-soft, rgba(0,0,0,.06)); color: var(--brand, var(--ink));
+}
+
+/* Free-form, stackable participants list shown on an event task type. */
+.trainee-grid { padding: 14px 16px 4px; display: grid; gap: 10px; }
+.trainee-grid-label { font-size: 12.5px; font-weight: 700; color: var(--ink-soft); }
+.trainee-list { display: grid; gap: 8px; }
+.trainee-row { display: flex; align-items: stretch; gap: 8px; }
+.trainee-row .trainee-input {
+  flex: 1 1 auto; min-width: 0;
+  font-family: var(--body); font-size: 14px; padding: 10px 12px;
+  border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+  background: var(--field-bg); color: var(--ink);
+}
+.trainee-row .trainee-input:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 4px var(--brand-soft); }
+.trainee-row .trainee-input:disabled { background: var(--surface-2); color: var(--ink-soft); cursor: not-allowed; border-style: dashed; }
+/* The editable trainee combobox: a text field plus an explicit dropdown caret,
+   matching the crew selectors. The field free-types; the caret opens .name-menu. */
+.trainee-combo { flex: 1 1 auto; min-width: 0; }
+.combo-caret {
+  flex: none; display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; border-radius: var(--radius-sm);
+  border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink-soft);
+  cursor: pointer; transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+.combo-caret:hover { background: var(--brand-soft); color: var(--brand); border-color: var(--brand); }
+.combo-caret svg { flex: none; }
+/* Body-anchored searchable dropdown for a trainee combobox (fixed-positioned
+   because the shift card clips overflow). */
+.name-menu {
+  position: fixed; z-index: 60; box-sizing: border-box;
+  max-height: 264px; overflow-y: auto; padding: 6px;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius-sm); box-shadow: var(--shadow-md);
+}
+.name-menu-opt {
+  display: block; width: 100%; text-align: start;
+  padding: 8px 10px; border: none; border-radius: 8px; background: transparent;
+  font-family: var(--body); font-size: 14px; color: var(--ink); cursor: pointer;
+}
+.name-menu-opt:hover, .name-menu-opt:focus { background: var(--brand-soft); outline: none; }
+.name-menu-opt.is-current { font-weight: 700; color: var(--brand); }
+.name-menu-empty { padding: 8px 10px; font-size: 12.5px; color: var(--ink-faint); }
+.btn-trainee-del {
+  flex: none; display: inline-flex; align-items: center; justify-content: center;
+  width: 38px; border-radius: var(--radius-sm);
+  border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink-soft);
+  cursor: pointer; transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+.btn-trainee-del:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
+.btn-trainee-add {
+  justify-self: start; display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 12px; border-radius: var(--radius-sm);
+  border: 1px dashed var(--line-strong); background: transparent; color: var(--brand, var(--ink));
+  font-family: var(--body); font-size: 13px; font-weight: 700; cursor: pointer;
+}
+.btn-trainee-add:hover { background: var(--brand-soft, rgba(0,0,0,.05)); }
+.btn-trainee-add svg { flex: none; }
+.trainee-empty { font-size: 13px; color: var(--ink-soft); font-style: italic; }
+
+/* When the crew grid is replaced by the trainee list, the note keeps its own row
+   with the normal grid padding but no top padding from a preceding grid. */
+.slot-grid.note-only { padding-top: 4px; }
+
+/* Editable toggle inside the monthly matrix picker. */
+.matrix-noform-toggle { margin: 6px 8px 8px; font-size: 12px; line-height: 1.35; }
+
+.assign-group + .assign-group { margin-top: 6px; }
+.assign-group-title {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 8px 4px;
+  font-size: 11.5px; font-weight: 700; letter-spacing: .02em; color: var(--ink-soft);
+}
+.assign-group-title::before { content: ""; width: 8px; height: 8px; border-radius: 50%; }
+.assign-group-title.prefer::before { background: var(--ok); }
+.assign-group-title.avoid::before  { background: var(--gold); }
+.assign-group-title.none::before   { background: var(--ink-faint); }
+.assign-group-title.cannot::before { background: var(--danger); }
+
+.assign-item {
+  width: 100%; display: flex; align-items: center; gap: 8px;
+  padding: 9px 10px; margin-top: 2px;
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  background: var(--field-bg); color: var(--ink);
+  font-family: var(--body); font-size: 13.5px; text-align: start;
+  cursor: pointer; transition: background .12s ease, border-color .12s ease;
+}
+.assign-item:hover { background: var(--surface-2); border-color: var(--line-strong); }
+.assign-item.prefer { border-color: rgba(44,107,63,.4); }
+.assign-item-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+/* Personal monthly progress shown right next to the name in the smart picker. */
+.assign-item-quota {
+  flex: 0 0 auto; font-size: 11px; font-weight: 700; letter-spacing: .02em;
+  padding: 2px 8px; border-radius: 999px; white-space: nowrap;
+}
+.assign-item-quota.ok      { background: var(--ok-soft); color: var(--ok); }
+.assign-item-quota.low     { background: var(--gold-soft); color: var(--gold); }
+.assign-item-quota.neutral { background: var(--surface-2); color: var(--ink-soft); border: 1px solid var(--line); }
+.assign-item-busy { flex: 0 0 auto; font-size: 11px; color: var(--ink-faint); }
+.assign-item-tag { flex: 0 0 auto; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
+.assign-item.prefer .assign-item-tag { background: var(--ok-soft); color: var(--ok); }
+.assign-item.avoid  .assign-item-tag { background: var(--gold-soft); color: var(--gold); }
+.assign-item.cannot .assign-item-tag { background: var(--danger-soft); color: var(--danger-deep); }
+.assign-item.cannot {
+  cursor: not-allowed; opacity: .6;
+  background: var(--surface-2); border-style: dashed;
+}
+.assign-item.cannot:hover { background: var(--surface-2); border-color: var(--line); }
+.assign-empty { padding: 18px 14px; text-align: center; color: var(--ink-faint); font-size: 13px; }
+
+/* ---------- Monthly matrix (admin "שיבוץ חודשי") ----------
+   A spreadsheet-style ledger: one row per day, one column per station grouped
+   under its shift. Header rows and the date/day columns stay pinned while the
+   grid scrolls in both directions. */
+
+/* Automated trainee ("מלווה") assignment toolbar above the matrix grid. */
+.auto-assign-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  margin: 4px 0 14px;
+}
+.auto-assign-select { position: relative; }
+/* Week-to-schedule picker: a labelled native date input plus a resolved
+   Sunday–Saturday range readout, scoping the engine run to one week. */
+.auto-assign-week {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+}
+.aa-week-label { font-size: 13px; font-weight: 600; color: var(--ink-faint); }
+.aa-week-input {
+  padding: 8px 10px;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  color-scheme: light;
+}
+.aa-week-input:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
+.aa-week-range { font-size: 13px; font-weight: 600; color: var(--brand); white-space: nowrap; }
+.aa-count { font-weight: 500; opacity: .85; margin-inline-start: 4px; }
+.auto-assign-panel {
+  position: absolute;
+  z-index: 40;
+  inset-inline-end: 0;
+  top: calc(100% + 6px);
+  min-width: 230px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding: 8px;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+}
+.aa-opt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  cursor: pointer;
+}
+.aa-opt:hover { background: var(--surface-2); }
+.aa-opt input { width: 16px; height: 16px; accent-color: var(--brand); }
+.aa-all {
+  font-weight: 600;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  margin-bottom: 4px;
+}
+.aa-empty { padding: 10px 8px; color: var(--ink-faint); font-size: 13.5px; }
+.auto-assign-hint {
+  flex: 1 1 260px;
+  min-width: 220px;
+  margin: 0;
+  color: var(--ink-faint);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+/* ---- Bulk schedule import ("ייבוא סידור ממד״א") ---- */
+.import-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  margin-top: 22px;
+  padding: 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+.import-head { flex: 1 1 260px; min-width: 240px; }
+.import-title {
+  margin: 0 0 4px;
+  font-family: var(--display);
+  font-size: 18px;
+  color: var(--ink);
+}
+.import-hint {
+  margin: 0;
+  color: var(--ink-faint);
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+.import-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex: 1 1 240px;
+  min-width: 220px;
+  min-height: 104px;
+  padding: 16px;
+  text-align: center;
+  color: var(--ink-soft);
+  background: var(--surface-2);
+  border: 1.5px dashed var(--line-strong);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color .15s, background .15s, color .15s;
+}
+.import-dropzone:hover { border-color: var(--brand); color: var(--brand); }
+.import-dropzone.is-drag {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+  color: var(--brand-deep);
+}
+.import-dropzone-icon { color: var(--brand); }
+.import-dropzone-text { font-size: 13.5px; font-weight: 500; }
+.import-file-name {
+  font-size: 12.5px;
+  color: var(--ink-faint);
+  word-break: break-all;
+}
+
+/* ---- Daily roster text ingestion (collapsible, under the MDA import) ---- */
+.daily-import {
+  margin-top: 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.daily-import-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 16px 18px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-align: start;
+  font-family: var(--body);
+  color: var(--ink);
+}
+.daily-import-head:hover { background: var(--surface-2); }
+.daily-import-caret {
+  display: inline-block;
+  color: var(--brand);
+  font-size: 18px;
+  transform: rotate(0deg);
+  transition: transform .15s;
+}
+.daily-import-head[aria-expanded="true"] .daily-import-caret { transform: rotate(90deg); }
+.daily-import-title {
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 600;
+}
+.daily-import-summary {
+  margin-inline-start: auto;
+  font-size: 12.5px;
+  color: var(--ink-faint);
+}
+.daily-import-panel {
+  padding: 4px 18px 20px;
+  border-top: 1px solid var(--line);
+}
+.daily-import-hint {
+  margin: 12px 0 12px;
+  color: var(--ink-faint);
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+.daily-import-dropzone {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 150px;
+}
+.daily-import-dropzone .import-dropzone-text { font-size: 15px; font-weight: 600; }
+.import-dropzone-sub { font-size: 12px; color: var(--ink-faint); }
+.daily-import-dropzone.is-loading {
+  pointer-events: none;
+  opacity: .6;
+  border-style: solid;
+}
+.daily-import-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 14px;
+}
+.daily-import-day {
+  font-size: 12.5px;
+  color: var(--ink-faint);
+}
+.daily-import-actions > .btn { margin-inline-start: auto; }
+.white-ambulance-panel {
+  display: grid;
+  gap: 18px;
+}
+.white-calendar-wrap {
+  margin-bottom: 0;
+}
+.white-ambulance-toolbar,
+.white-ambulance-schedule {
+  margin-top: 0;
+}
+.white-ambulance-toolbar-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 14px;
+}
+.white-ambulance-date-field {
+  min-width: min(280px, 100%);
+}
+.white-ambulance-grid {
+  min-height: 120px;
+}
+.white-matrix-wrap {
+  overflow: auto;
+}
+.white-monthly-table td,
+.white-monthly-table th {
+  white-space: nowrap;
+}
+.white-ambulance-import .daily-import-panel {
+  display: grid;
+  gap: 12px;
+}
+.private-daily-card {
+  margin-top: 18px;
+}
+.private-daily-sub {
+  margin: 6px 0 0;
+}
+.private-daily-list {
+  display: grid;
+  gap: 12px;
+}
+.private-daily-row {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  padding: 12px 14px;
+}
+.private-daily-row-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.private-daily-station {
+  font-size: 15px;
+}
+.private-daily-shift,
+.private-daily-source,
+.private-daily-meta {
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+.private-daily-meta {
+  display: grid;
+  gap: 4px;
+}
+@media (max-width: 640px) {
+  .daily-import-summary { display: none; }
+  .daily-import-actions { flex-direction: column; align-items: stretch; }
+  .daily-import-actions > .btn { min-height: 48px; }
+  .white-ambulance-toolbar-row { align-items: stretch; }
+  .private-daily-row-head { align-items: flex-start; flex-direction: column; }
+}
+
+/* ---- Automated scheduling engine: post-run summary report ---- */
+.engine-report { margin-top: 6px; }
+.engine-loading,
+.engine-empty {
+  padding: 18px;
+  color: var(--ink-faint);
+  font-size: 14px;
+}
+.engine-report-head {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 16px 18px;
+  margin-bottom: 14px;
+}
+.engine-report-title {
+  margin: 0 0 12px;
+  font-size: 17px;
+  font-weight: 700;
+}
+.engine-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.engine-stat {
+  flex: 1 1 140px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 14px;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+}
+.engine-stat-num { font-size: 24px; font-weight: 800; color: var(--brand); }
+.engine-stat-cap { font-size: 12.5px; color: var(--ink-faint); }
+.engine-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+.engine-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px 14px;
+  margin-bottom: 10px;
+}
+.engine-card-name { font-size: 15.5px; font-weight: 700; }
+.engine-card-tally { font-size: 13px; color: var(--ink-faint); }
+.engine-card-tally.is-met { color: var(--ok, #2e7d32); font-weight: 600; }
+.engine-card-empty { margin: 0; font-size: 13px; color: var(--ink-faint); }
+.engine-log {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+.engine-log th,
+.engine-log td {
+  text-align: start;
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--line);
+}
+.engine-log th {
+  font-weight: 600;
+  color: var(--ink-faint);
+  font-size: 12.5px;
+}
+.engine-log tbody tr:last-child td { border-bottom: 0; }
+.engine-log .pref-prefer { color: var(--ok, #2e7d32); font-weight: 600; }
+.engine-log .pref-avoid { color: var(--warn, #c77700); font-weight: 600; }
+
+.matrix-wrap {
+  margin-top: 4px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+/* The single scroll viewport for the grid — pans both axes. The heavy table is
+   kept far wider than any phone screen (min-width below), so it swipes sideways
+   like a desktop spreadsheet instead of collapsing columns into each other. */
+.matrix-scroll {
+  width: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  max-height: calc(100vh - 260px);
+}
+/* Wrapper kept around the grid; with `zoom`-based scaling (see applyMatrixZoom)
+   the layout box reflows on its own, so no explicit footprint sizing is needed. */
+.matrix-zoomer { position: relative; }
+.matrix-loading, .matrix-empty {
+  padding: 44px 22px; text-align: center; color: var(--ink-faint); font-size: 14px;
+}
+
+/* Monthly-matrix toolbar: the edit-mode pencil, the global undo button and a
+   short usage hint, above the grid and sticky-free so it never scrolls under
+   the pinned header. */
+.matrix-toolbar {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line-strong);
+  background: var(--surface);
+}
+.matrix-toolbar-hint { font-size: 12.5px; color: var(--ink-faint); }
+
+/* Zoom stepper: two tiny +/- buttons flanking a live percentage readout.
+   Pushed to the toolbar's trailing edge so it never crowds the pencil/undo. */
+.matrix-zoom {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-inline-start: auto;
+}
+.matrix-zoom-btn {
+  min-width: 26px; padding: 2px 8px;
+  font-size: 15px; font-weight: 700; line-height: 1.1;
+}
+.matrix-zoom-label {
+  min-width: 42px; text-align: center;
+  font-size: 12.5px; font-variant-numeric: tabular-nums; color: var(--ink-faint);
+}
+
+/* Top-of-page edit-mode indicator: bold, clean red, shown only while Edit Mode
+   is active (the element carries [hidden] otherwise). */
+.matrix-edit-banner {
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #dc2626;
+}
+.matrix-edit-banner[hidden] { display: none; }
+
+
+/* Pencil edit-mode trigger — replaces the old view/edit switch on both the daily
+   board header and the monthly-grid toolbar. A round icon button that inherits
+   the surrounding text color (white on the day header's gradient, dark on the
+   grid toolbar). It fills with the brand color while edit mode is active. */
+.edit-pencil-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px; padding: 0;
+  border: 1px solid currentColor; border-radius: 50%;
+  background: transparent; color: inherit; cursor: pointer; opacity: .85;
+  transition: background .15s, color .15s, border-color .15s, box-shadow .15s, opacity .15s;
+}
+.edit-pencil-btn:hover { opacity: 1; background: rgba(127, 127, 127, .16); }
+.edit-pencil-btn:focus-visible { outline: none; box-shadow: 0 0 0 4px var(--brand-soft); }
+.edit-pencil-btn.is-active {
+  background: var(--brand); border-color: var(--brand); color: #fff; opacity: 1;
+  box-shadow: 0 2px 10px rgba(var(--brand-rgb), .35);
+}
+
+/* Global "ביטול פעולה אחרונה" (undo) button — reverts the last scheduling change
+   from either tab. Sits beside the pencil; disabled and muted when the shared
+   history stack is empty. Inherits the local text color like the pencil. */
+.undo-action-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 13px; border-radius: 999px;
+  border: 1px solid currentColor; background: transparent; color: inherit;
+  font-size: 12.5px; font-weight: 600; cursor: pointer; opacity: .9;
+  transition: background .15s, opacity .15s, box-shadow .15s;
+}
+.undo-action-btn:hover:not(:disabled) { opacity: 1; background: rgba(127, 127, 127, .16); }
+.undo-action-btn:focus-visible { outline: none; box-shadow: 0 0 0 4px var(--brand-soft); }
+.undo-action-btn:disabled { opacity: .4; cursor: default; }
+.undo-action-btn svg { flex: none; }
+
+/* Week-focus banner: shown when the grid is scoped to one staffed week after an
+   engine run, with a control to drop back to the full month. */
+.matrix-focus-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  padding: 10px 14px;
+  background: rgba(var(--brand-rgb), .08);
+  border-bottom: 1px solid var(--line-strong);
+}
+.matrix-focus-label { font-size: 13.5px; font-weight: 600; color: var(--brand); }
+.matrix-table tbody tr.is-focus-week td { background: rgba(var(--brand-rgb), .05); }
+.matrix-table {
+  border-collapse: separate; border-spacing: 0;
+  width: max-content; min-width: 1200px;
+  font-family: var(--body); font-size: 12.5px; color: var(--ink);
+}
+.matrix-table th, .matrix-table td {
+  border-inline-end: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+/* Two sticky header rows: shift groups (top) then station sub-columns. */
+.matrix-table thead th {
+  position: sticky; z-index: 21;
+  background: var(--surface-2);
+  font-weight: 700; text-align: center; white-space: nowrap;
+  padding: 0 10px;
+}
+.mx-shift-group {
+  top: 0; height: 34px;
+  border-bottom: 1px solid var(--line-strong);
+  font-family: var(--display); font-size: 14px;
+}
+.mx-shift-group .shift-band { display: inline-block; vertical-align: middle; height: 14px; margin-inline-end: 8px; }
+.mx-shift-group.night   { box-shadow: inset 0 3px 0 #3b3a6b; }
+.mx-shift-group.morning { box-shadow: inset 0 3px 0 var(--gold); }
+.mx-shift-group.evening { box-shadow: inset 0 3px 0 var(--teal); }
+.mx-station {
+  top: 34px; height: 38px;
+  min-width: 124px; max-width: 168px;
+  font-size: 12px; font-weight: 600; color: var(--ink-soft);
+  overflow: hidden; text-overflow: ellipsis;
+}
+
+/* Pinned date / day-of-week columns. A solid, slightly darker background fully
+   hides shift cells scrolling underneath, a raised z-index keeps the frozen
+   column strictly on top of the moving cells, and a stronger inner-edge border
+   visually separates the frozen column from the rest of the sheet. */
+.mx-col-date, .mx-col-day {
+  position: sticky; z-index: 20;
+  background: var(--surface-2);
+  text-align: start; white-space: nowrap;
+  font-weight: 600; padding: 8px 12px;
+  border-inline-end: 2px solid var(--line-strong);
+}
+/* Keep the frozen column opaque even on row states that recolor their cells,
+   so scrolling content never bleeds through the translucent overlays. */
+.matrix-table tbody tr.is-weekend td.mx-col-date,
+.matrix-table tbody tr.is-weekend td.mx-col-day,
+.matrix-table tbody tr.is-today td.mx-col-date,
+.matrix-table tbody tr.is-today td.mx-col-day,
+.matrix-table tbody tr:hover td.mx-col-date,
+.matrix-table tbody tr:hover td.mx-col-day {
+  background: var(--surface-2);
+}
+.mx-col-date { inset-inline-start: 0; width: 104px; min-width: 104px; font-variant-numeric: tabular-nums; }
+.mx-col-day  { inset-inline-start: 104px; width: 104px; min-width: 104px; color: var(--ink-soft); }
+/* Corner cells are pinned on both axes and ride above the rest. */
+.mx-corner { z-index: 22; top: 0; }
+
+/* Row states. */
+.matrix-table tbody tr.is-weekend td { background: var(--surface-2); }
+.matrix-table tbody tr.is-today td { background: rgba(var(--brand-rgb), .12); }
+.matrix-table tbody tr.is-today td.mx-col-date { box-shadow: inset 3px 0 0 var(--brand); }
+.matrix-table tbody tr:hover td { background: var(--surface-2); }
+
+/* Cells. */
+.mx-cell { padding: 5px; vertical-align: top; min-width: 124px; }
+.mx-cell.is-disabled {
+  text-align: center; color: var(--ink-faint);
+  background: repeating-linear-gradient(135deg, var(--surface), var(--surface) 6px, var(--surface-2) 6px, var(--surface-2) 12px);
+}
+.mx-cell-off { color: var(--ink-faint); }
+.mx-cell-crew {
+  margin-top: 4px; padding-top: 3px; border-top: 1px dashed var(--line);
+  font-size: 10.5px; color: var(--ink-faint);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* Interactive intern slots inside a cell. */
+.mx-slot { display: flex; align-items: center; gap: 3px; }
+.mx-slot + .mx-slot { margin-top: 4px; }
+
+/* Read-only rendering of an intern slot (default, edit mode off): a plain line
+   rather than a button. When a cell carries both escorts (מלווה א׳ / מלווה ב׳)
+   a very thin divider separates the two names for a clean, organised look
+   instead of loosely stacked text. */
+.mx-slot-view {
+  flex: 1 1 auto; min-width: 0;
+  display: flex; align-items: center; gap: 6px;
+  padding: 2px 2px; font-size: 12px; color: var(--ink);
+}
+.mx-slot-view .slot-role-dot { flex: 0 0 auto; }
+.mx-slot.is-readonly.is-empty .mx-slot-view { color: var(--ink-faint); }
+.mx-slot.is-readonly + .mx-slot.is-readonly {
+  margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--line);
+}
+.mx-slot-pick {
+  flex: 1 1 auto; min-width: 0;
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 8px; border-radius: var(--radius-sm);
+  border: 1px solid var(--line); background: var(--field-bg);
+  color: var(--ink); font-family: var(--body); font-size: 12px; text-align: start;
+  cursor: pointer; transition: background .12s ease, border-color .12s ease;
+}
+.mx-slot-pick:hover { background: var(--surface-2); border-color: var(--line-strong); }
+.mx-slot.is-empty .mx-slot-pick { border-style: dashed; }
+.mx-slot-pick .slot-role-dot { flex: 0 0 auto; }
+.mx-slot-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.mx-slot-name.is-placeholder { font-weight: 500; color: var(--ink-faint); }
+.mx-slot-clear {
+  flex: 0 0 auto; width: 24px; height: 28px;
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  background: var(--field-bg); color: var(--ink-faint);
+  font-size: 15px; line-height: 1; cursor: pointer;
+  transition: color .12s ease, border-color .12s ease, background .12s ease;
+}
+.mx-slot-clear:hover { color: var(--danger-deep); border-color: var(--danger); background: var(--danger-soft); }
+
+/* Matrix picker: search box + clear-row + highlight of the current pick. */
+.matrix-pop-search { padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.matrix-pop-search-input {
+  width: 100%; padding: 7px 10px; font-family: var(--body); font-size: 13px;
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  background: var(--field-bg); color: var(--ink);
+}
+.matrix-clear-item { border-color: var(--danger); color: var(--danger-deep); }
+.matrix-clear-item:hover { background: var(--danger-soft); border-color: var(--danger-deep); }
+.matrix-clear-tag { background: var(--danger-soft); color: var(--danger-deep); }
+.assign-item.is-current { border-color: var(--brand); box-shadow: inset 0 0 0 1px var(--brand); }
+
+/* ---------- Dark mode: component overrides ----------
+   A few surfaces use literal light values (frosted topbar, the dark toast).
+   Re-tint them so dark mode reads cleanly. */
+html[data-theme="dark"] .topbar { background: rgba(20,23,28,.85); }
+html[data-theme="dark"] .toast { background: #2a2f37; color: #f1f3f5; }
+html[data-theme="dark"] .toast.ok { background: var(--ok); }
+html[data-theme="dark"] .day-cell.is-today { border-color: var(--gold); }
+
+/* ---------- Responsive ---------- */
+/* Medium screens: tighten the topbar so the nav tabs need less room before
+   the action cluster is forced to scroll them. */
+@media (max-width: 1080px) {
+  .topbar { gap: 14px; padding: 12px 18px; }
+  .nav-tab { padding: 8px 12px; }
+}
+@media (max-width: 860px) {
+  .topbar { flex-wrap: wrap; gap: 12px 18px; padding: 12px 18px; }
+  .main-nav { order: 3; flex-basis: 100%; }
+  .nav-tab { flex: 1; text-align: center; }
+  .nav-submenu,
+  .nav-submenu-children { width: 100%; }
+  .topbar-user { margin-inline-start: auto; }
+  .tab-panel { padding: 22px 16px 50px; }
+  .page-title { font-size: 23px; }
+}
+@media (max-width: 620px) {
+  .calendar-wrap { padding: 10px; }
+  .calendar-weekdays, .calendar-grid { gap: 5px; }
+  .day-cell { min-height: 58px; padding: 6px; }
+  .day-num { font-size: 15px; }
+  .day-flag span { display: none; }
+  .day-preview { margin-top: 5px; gap: 2px; }
+  .day-shift { gap: 4px; }
+  .day-shift-band { height: 10px; }
+  .day-shift-names { font-size: 9.5px; }
+  .slot-grid { grid-template-columns: 1fr 1fr; }
+  .users-table th, .users-table td { padding: 11px 12px; font-size: 13px; }
+  .weekly-grid th, .weekly-grid td { padding: 8px 7px; }
+  .weekly-opts .avail-opt { padding: 5px 9px; font-size: 12px; }
+  .weekly-day { min-width: 64px; }
+}
+@media (max-width: 420px) {
+  .slot-grid { grid-template-columns: 1fr; }
+}
+
+/* WhatsApp export toolbar — sits directly under the day's shift cards. Holds
+   one button per shift type present, each copying that single shift's roster. */
+.wa-export {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 14px;
+}
+.btn-wa {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #25d366;
+  color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+.btn-wa:hover { background: #1ebe5b; box-shadow: 0 8px 22px rgba(37,211,102,.30); }
+.btn-wa svg { flex: none; }
+@media (max-width: 560px) {
+  .wa-export { justify-content: stretch; }
+  .btn-wa { width: 100%; justify-content: center; }
+}
+
+/* ---------------- Role & permissions management (dynamic RBAC) ---------------- */
+/* An intermediate "editor" badge tier between admin (manager) and viewer. */
+.role-badge.editor { background: var(--ok-soft); color: var(--ok); }
+
+.roles-panel { margin-top: 22px; }
+
+/* ---------- Course catalog management ---------- */
+.courses-panel { margin-top: 22px; }
+/* Stack the add-course form (name → button) vertically like the role form. */
+.course-form { grid-template-columns: 1fr; align-items: stretch; }
+.courses-list { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 8px; }
+.courses-empty { color: var(--ink-soft); font-size: 13.5px; }
+.course-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px; border: 1px solid var(--line); border-radius: var(--radius-sm);
+  background: var(--field-bg);
+}
+.course-item-name { flex: 1 1 auto; font-weight: 600; font-size: 14.5px; }
+.course-item-actions { display: inline-flex; gap: 8px; flex: none; }
+.btn-icon {
+  width: 36px; height: 36px; padding: 0; display: grid; place-items: center;
+  border-radius: var(--radius-sm); border: 1px solid var(--line-strong);
+  background: var(--field-bg); color: var(--ink-soft); cursor: pointer;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+.course-edit:hover { background: var(--brand); color: #fff; border-color: var(--brand); }
+.course-delete { color: var(--danger); }
+
+/* Stack the add-role form (name → permission checkboxes → button) vertically,
+   overriding the 4-column .lock-form grid it reuses. */
+.role-form { grid-template-columns: 1fr; align-items: stretch; }
+.perm-check {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 13px; font-weight: 600; color: var(--ink-soft); cursor: pointer;
+}
+.perm-check input { width: 16px; height: 16px; accent-color: var(--brand); cursor: pointer; }
+
+/* Collapsible permission categories in the "add role" form. Sections default to
+   collapsed; opening one toggles .is-open (the inputs stay in the DOM while
+   hidden so the form can still be submitted from any open/closed combination). */
+.perm-accordion { display: flex; flex-direction: column; gap: 8px; }
+.perm-group { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--surface); }
+.perm-group-head {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  padding: 10px 12px; background: var(--surface-2); border: 0; cursor: pointer;
+  font-family: inherit; font-size: 13px; font-weight: 700; color: var(--ink);
+  text-align: start;
+}
+.perm-group-head:hover { background: var(--line); }
+.perm-group-caret {
+  font-size: 16px; line-height: 1; color: var(--ink-soft);
+  transition: transform .15s ease;
+}
+.perm-group.is-open .perm-group-caret { transform: rotate(90deg); }
+.perm-group-title { flex: 1; }
+.perm-group-count {
+  font-size: 11px; font-weight: 700; color: var(--brand-deep);
+  background: var(--brand-soft); padding: 1px 8px; border-radius: 999px;
+}
+.perm-group-body { display: none; flex-wrap: wrap; gap: 10px 18px; padding: 12px; }
+.perm-group.is-open .perm-group-body { display: flex; }
+
+.roles-matrix-card { margin-top: 18px; }
+.roles-matrix th, .roles-matrix td { text-align: center; vertical-align: middle; }
+.roles-matrix th:first-child, .roles-matrix td:first-child { text-align: start; }
+.roles-matrix .perm-cell input { width: 17px; height: 17px; accent-color: var(--brand); cursor: pointer; }
+
+/* Category column headers in the matrix double as expand/collapse toggles. */
+.roles-matrix .perm-cat-head { padding: 0; background: var(--surface-2); }
+.roles-matrix .cat-toggle {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  width: 100%; padding: 8px 10px; background: transparent; border: 0; cursor: pointer;
+  font-family: inherit; font-size: 12.5px; font-weight: 700; color: var(--ink);
+}
+.roles-matrix .cat-toggle:hover { color: var(--brand-deep); }
+.roles-matrix .cat-caret {
+  font-size: 14px; line-height: 1; color: var(--ink-soft);
+  transition: transform .15s ease;
+}
+.roles-matrix .perm-cat-head.is-open .cat-caret { transform: rotate(90deg); }
+.roles-matrix .cat-count {
+  font-size: 10.5px; font-weight: 700; color: var(--brand-deep);
+  background: var(--brand-soft); padding: 0 6px; border-radius: 999px;
+}
+.roles-matrix .perm-sub-head { font-size: 12px; font-weight: 600; color: var(--ink-soft); }
+.roles-matrix .perm-sub-collapsed { padding: 4px; }
+.perm-count-pill {
+  display: inline-block; min-width: 36px; font-size: 11px; font-weight: 700;
+  color: var(--ink-soft); background: var(--surface-2);
+  padding: 2px 8px; border-radius: 999px;
+}
+.perm-count-pill.has { color: var(--brand-deep); background: var(--brand-soft); }
+.role-system-tag {
+  font-size: 11px; font-weight: 700; color: var(--brand-deep);
+  background: var(--brand-soft); padding: 1px 7px; border-radius: 999px;
+  margin-inline-start: 6px;
+}
+
+/* ============================================================
+   Mobile optimization (≤768px) for the admin engine, bulk MDA
+   import, and roles/permissions views. Layered on top of the
+   860px topbar rules above — these refine the phone experience:
+   stacked controls, scrollable tables/nav, and 44px tap targets.
+   ============================================================ */
+@media (max-width: 768px) {
+  /* ---- Admin tab nav: swipeable horizontal strip, never wraps ---- */
+  .main-nav {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 6px;
+    padding-bottom: 2px;
+  }
+  .main-nav::-webkit-scrollbar { display: none; }
+  .nav-tab { flex: 0 0 auto; white-space: nowrap; min-height: 44px; }
+  .nav-submenu { flex: 0 0 auto; }
+  .nav-submenu-children { flex-wrap: nowrap; overflow-x: auto; }
+
+  /* Page header + month controls go full width, centered */
+  .page-head { align-items: stretch; }
+  .month-nav { justify-content: center; width: 100%; }
+
+  /* ---- Automated scheduling engine: controls stack vertically ---- */
+  .auto-assign-bar { flex-direction: column; align-items: stretch; gap: 12px; }
+  .auto-assign-bar > .btn,
+  .auto-assign-select,
+  .auto-assign-week,
+  .auto-assign-select > .btn { width: 100%; }
+  .aa-week-input { width: 100%; min-height: 44px; }
+  .auto-assign-bar > .btn,
+  .auto-assign-select > .btn { min-height: 44px; }
+  /* Keep the trainee picker dropdown inside the viewport */
+  .auto-assign-panel {
+    inset-inline: 0;
+    min-width: 0;
+    width: 100%;
+    max-height: 60vh;
+  }
+  .aa-opt { min-height: 44px; }
+  .aa-opt input { width: 20px; height: 20px; }
+  .auto-assign-hint { flex-basis: auto; }
+
+  /* Summary stats two-up; the per-trainee report table scrolls
+     sideways so names / shift types / "4/5" tallies never clip. */
+  .engine-stat { flex: 1 1 calc(50% - 6px); }
+  .engine-card {
+    width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  .engine-log { min-width: 460px; }
+  .engine-log th, .engine-log td,
+  .engine-card-name, .engine-card-tally { white-space: nowrap; }
+
+  /* ---- Bulk MDA import: dropzone + button stack full width ---- */
+  .import-bar { flex-direction: column !important; align-items: stretch; }
+  .import-head,
+  .import-dropzone,
+  .import-bar > .btn {
+    width: 100% !important;
+    min-width: 0;
+    flex-basis: auto;
+    margin-bottom: 12px;
+  }
+  .import-dropzone { min-height: 120px; }
+  .import-bar > .btn { min-height: 48px; margin-bottom: 0; }
+
+  /* ---- Roles & permissions: full-width accordion, big tap targets ---- */
+  .role-form { grid-template-columns: 1fr; }
+  .perm-accordion, .perm-group { width: 100%; }
+  .perm-group-head { min-height: 48px; padding: 16px !important; }
+  /* Stack the permission checkboxes one per row inside each
+     collapsible sub-category, each a full-width 44px tap target. */
+  .perm-group-body { flex-direction: column; gap: 4px; }
+  .perm-check {
+    width: 100%;
+    min-height: 44px;
+    padding: 8px 6px;
+    font-size: 14px;
+  }
+  .perm-check input { width: 22px; height: 22px; }
+
+  /* The roles × permissions matrix is too wide for a phone, so flip it
+     from a 2D grid into a stack of per-role cards: every cell becomes a
+     "label : control" row, with the column header injected via the cell's
+     data-label so each checkbox stays self-explanatory. */
+  .roles-matrix-card { overflow-x: visible; }
+  .roles-matrix,
+  .roles-matrix thead,
+  .roles-matrix tbody,
+  .roles-matrix th,
+  .roles-matrix td,
+  .roles-matrix tr {
+    display: block !important;
+  }
+  .roles-matrix thead { display: none !important; }
+  .roles-matrix { min-width: 0 !important; }
+  .roles-matrix tbody tr {
+    margin-bottom: 14px;
+    padding: 6px 12px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+  .roles-matrix tbody td {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 2px;
+    border-bottom: 1px solid var(--line);
+    white-space: normal;
+  }
+  .roles-matrix tbody td:last-child { border-bottom: 0; }
+  .roles-matrix tbody td:before {
+    content: attr(data-label);
+    flex: 1 1 auto;
+    text-align: start;
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+  .roles-matrix tbody td.perm-cell-name {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .roles-matrix .perm-cell input { width: 24px; height: 24px; }
+  .roles-matrix .cat-toggle { min-height: 48px; padding: 16px !important; }
+
+  /* The user-management accounts table has 7 columns and overflows a phone,
+     so on narrow screens it collapses into a stack of per-user cards: each row
+     is its own card, name + email span the full width, and the status / role /
+     target / monthly-count / actions cells stack beneath, every cell prefixed
+     with its column label via data-label. Scoped to #tab-users' own accounts
+     table only — the roles matrix, forms, stations and roster tables (which
+     share the .users-table base class) keep their existing layouts. */
+  #tab-users > .table-card { overflow-x: visible; }
+  #tab-users > .table-card > .users-table,
+  #tab-users > .table-card > .users-table thead,
+  #tab-users > .table-card > .users-table tbody,
+  #tab-users > .table-card > .users-table tr,
+  #tab-users > .table-card > .users-table td {
+    display: block !important;
+  }
+  #tab-users > .table-card > .users-table thead { display: none !important; }
+  #tab-users > .table-card > .users-table { min-width: 0 !important; }
+  #tab-users > .table-card > .users-table tbody tr {
+    margin-bottom: 14px;
+    padding: 12px 14px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+  #tab-users > .table-card > .users-table tbody tr:hover td { background: transparent; }
+  #tab-users > .table-card > .users-table tbody td {
+    display: flex !important;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 2px;
+    border-bottom: 1px solid var(--line);
+    text-align: end;
+    white-space: normal;
+    word-break: break-word;
+  }
+  #tab-users > .table-card > .users-table tbody td:last-child { border-bottom: 0; }
+  #tab-users > .table-card > .users-table tbody td:before {
+    content: attr(data-label);
+    flex: 0 0 auto;
+    font-weight: 600;
+    color: var(--ink-soft);
+    text-align: start;
+  }
+  /* Name cell reads as the card title; email wraps long strings full width. */
+  #tab-users > .table-card > .users-table tbody td[data-label="שם"] {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  #tab-users > .table-card > .users-table tbody td.u-email { word-break: break-all; }
+  /* The role <select> and target <input> take the remaining row width. */
+  #tab-users > .table-card > .users-table tbody td select,
+  #tab-users > .table-card > .users-table tbody td .target-input {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  /* Action buttons drop onto their own line, wrap, and follow the RTL flow. */
+  #tab-users > .table-card > .users-table tbody td .row-actions {
+    flex: 1 1 100%;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  /* Badges and role/status tags never wrap or clip inside their card row. */
+  #tab-users .status-badge,
+  #tab-users .quota-badge,
+  #tab-users .role-badge {
+    white-space: nowrap;
+    max-width: max-content;
+  }
+}
+
+/* ---------- Weekly availability submission tracking (engine tab) ---------- */
+.submission-status {
+  margin-top: 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.submission-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 16px 18px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-align: start;
+  font-family: var(--body);
+  color: var(--ink);
+}
+.submission-head:hover { background: var(--surface-2); }
+.submission-caret {
+  display: inline-block;
+  color: var(--brand);
+  font-size: 18px;
+  transform: rotate(0deg);
+  transition: transform .15s;
+}
+.submission-head[aria-expanded="true"] .submission-caret { transform: rotate(90deg); }
+.submission-title {
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 600;
+}
+.submission-summary {
+  margin-inline-start: auto;
+  font-size: 12.5px;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+.submission-panel {
+  padding: 4px 18px 20px;
+  border-top: 1px solid var(--line);
+}
+.submission-weeknav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 14px 0 18px;
+}
+.submission-week-label {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ink);
+  min-width: 120px;
+  text-align: center;
+  direction: ltr;
+}
+.submission-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.submission-col {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+}
+.submission-col.is-submitted { border-top: 3px solid var(--ok); }
+.submission-col.is-pending { border-top: 3px solid var(--gold); }
+.submission-col-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.submission-col-title {
+  margin: 0 0 10px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.submission-col-head .submission-col-title { margin: 0; }
+.submission-count { color: var(--ink-faint); font-weight: 500; font-size: 13px; }
+.submission-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+.submission-item {
+  display: flex;
+  align-items: center;
+  padding: 7px 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  color: var(--ink);
+}
+.submission-col.is-submitted .submission-item { border-inline-start: 3px solid var(--ok); }
+.submission-col.is-pending .submission-item { border-inline-start: 3px solid var(--gold); }
+.submission-empty {
+  padding: 10px;
+  color: var(--ink-faint);
+  font-size: 13px;
+  text-align: center;
+}
+.btn-copy { border-color: var(--brand); color: var(--brand); white-space: nowrap; }
+.btn-copy:not(:disabled):hover { background: var(--brand); color: #fff; }
+/* Per-role default weekly quota input in the roles matrix. */
+.perm-cell-quota { text-align: center; }
+.role-quota-input { width: 64px; text-align: center; }
+
+/* Per-role certification-stage targets: four small numbered inputs (stage 1→4)
+   sitting beside the weekly quota in the roles matrix. */
+.perm-cell-stages { text-align: center; }
+.role-stage-inputs {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.role-stage-input {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.role-stage-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  line-height: 1;
+}
+.role-stage-target { width: 52px; text-align: center; }
+
+/* Per-user custom stage ladder in the trainee management table. Laid out as a
+   compact horizontal row — the "מותאם" switch followed by the four numbered
+   stage inputs — so the cell keeps a normal row height instead of growing into a
+   tall stack. The switch unlocks the inputs; while locked they dim to read-only. */
+.custom-stage-wrap {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px 12px;
+}
+.custom-stage-toggle { justify-content: center; flex: 0 0 auto; }
+.custom-stage-cell .role-stage-inputs { flex-wrap: nowrap; gap: 8px; }
+.role-stage-inputs.is-locked { opacity: 0.5; }
+.role-stage-inputs.is-locked .role-stage-target { cursor: not-allowed; }
+
+/* Keep the "יעדי שלבים (1-4)" column header on one clean line so the trailing
+   "(1-4)" never breaks mid-parenthesis across two rows. */
+.users-table th.th-stage-target,
+.custom-stage-cell { white-space: nowrap; }
+
+@media (max-width: 720px) {
+  .nav-submenu,
+  .nav-submenu-children { width: 100%; }
+  .submission-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   User management — collapsible category groups
+   (pending / trainees-by-course / volunteers / staff)
+   ============================================================ */
+.users-sections { display: flex; flex-direction: column; gap: 14px; }
+
+.user-group {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  overflow: hidden;
+}
+.user-group-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 16px 18px;
+  background: var(--surface-2);
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  color: var(--ink);
+  text-align: start;
+}
+.user-group-head:hover { background: var(--line); }
+.user-group-caret {
+  flex: 0 0 auto;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--ink-faint);
+  transition: transform .18s ease;
+}
+.user-group.is-open > .user-group-head .user-group-caret { transform: rotate(90deg); }
+.user-group-titles { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.user-group-title { font-weight: 700; font-size: 15.5px; }
+.user-group-sub { font-size: 12.5px; color: var(--ink-faint); font-weight: 400; }
+.user-group-count {
+  flex: 0 0 auto;
+  min-width: 26px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--brand-soft);
+  color: var(--brand-deep);
+  font-size: 12.5px;
+  font-weight: 700;
+  text-align: center;
+}
+.user-group-body { display: none; padding: 14px 16px; }
+.user-group.is-open > .user-group-body { display: block; }
+/* Wide account tables (the trainee roster carries up to 11 columns) can exceed
+   the card width; scroll them horizontally inside the section instead of
+   overflowing/clipping against the group's rounded, overflow:hidden frame. */
+.user-group.is-open > .user-group-body { overflow-x: auto; }
+
+/* Roster / manual-tutor accordions: render the body always (collapsed via a
+   0fr→1fr grid row) so open/close animates smoothly instead of snapping. */
+.roster-collapse > .user-group-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  padding-block: 0;
+  transition: grid-template-rows .26s ease, padding-block .26s ease;
+}
+.roster-collapse.is-open > .user-group-body {
+  grid-template-rows: 1fr;
+  padding-block: 14px;
+}
+.roster-collapse > .user-group-body > .acc-inner { min-height: 0; overflow: hidden; }
+
+/* Pending section draws the eye — it flags new registrations. */
+.user-group.is-pending { border-color: var(--gold); }
+.user-group.is-pending .user-group-count { background: var(--gold-soft); color: var(--gold); }
+
+/* Per-course sub-sections nested inside the active-trainees group. */
+.user-subgroup { background: var(--surface-2); margin-bottom: 10px; border-color: var(--line); }
+.user-subgroup:last-child { margin-bottom: 0; }
+.user-subgroup > .user-group-head { background: var(--surface); padding: 12px 14px; }
+.user-subgroup > .user-group-head:hover { background: var(--line); }
+.user-subgroup .user-group-title { font-size: 14px; }
+.user-subgroup .user-group-count { background: var(--ok-soft); color: var(--ok); }
+.user-subgroup > .user-group-body { padding: 0; }
+
+/* Account tables rendered inside a (sub-)section. */
+.users-acct-table { width: 100%; border-collapse: collapse; }
+.users-acct-table th,
+.users-acct-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  text-align: start;
+  vertical-align: middle;
+  font-size: 13.5px;
+}
+.users-acct-table th {
+  background: var(--surface-2);
+  font-weight: 700;
+  color: var(--ink-soft);
+  font-size: 12.5px;
+  letter-spacing: .02em;
+}
+.users-acct-table tr:last-child td { border-bottom: none; }
+.users-acct-table tbody tr:hover td { background: var(--surface-2); }
+.users-acct-table .u-email { direction: ltr; text-align: start; color: var(--ink-soft); }
+.users-acct-table td .muted { color: var(--ink-faint); }
+.users-acct-table select {
+  width: 100%;
+  max-width: 220px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+}
+.users-acct-table select:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 4px var(--brand-soft); }
+
+/* Approved-tutors picker: a compact disclosure of tutor checkboxes inside a
+   trainee/volunteer row, plus the engine-report flag for a mentorship pairing. */
+.tutors-picker { max-width: 220px; }
+.tutors-picker > summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 13px;
+  white-space: nowrap;
+}
+.tutors-picker > summary::-webkit-details-marker { display: none; }
+.tutors-picker[open] > summary { border-color: var(--brand); box-shadow: 0 0 0 4px var(--brand-soft); }
+.tutors-options {
+  margin-top: 6px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  max-height: 180px;
+  overflow-y: auto;
+}
+.tutors-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 6px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  cursor: pointer;
+}
+.tutors-option:hover { background: var(--surface); }
+.tutors-option input { flex: none; }
+.tutors-hint { font-size: 12.5px; }
+.engine-log tr.is-mentor td { background: var(--brand-soft); }
+.users-acct-table .target-input {
+  width: 72px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+}
+/* Graduated / released trainee row is dimmed but still fully actionable. */
+.users-acct-table tr.is-inactive td { opacity: .6; }
+.users-acct-table tr.is-inactive td .row-actions,
+.users-acct-table tr.is-inactive td .switch { opacity: 1; }
+
+.users-empty {
+  margin: 0;
+  padding: 18px;
+  text-align: center;
+  color: var(--ink-faint);
+  font-size: 13.5px;
+}
+
+/* On/off switch — used by the "משתלם פעיל" and login-access toggles. */
+.switch { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; flex-wrap: nowrap; white-space: nowrap; }
+.switch input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.switch-track {
+  position: relative;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--line-strong);
+  transition: background .16s ease;
+}
+.switch-track::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .25);
+  transition: transform .16s ease;
+}
+.switch input:checked + .switch-track { background: var(--ok); }
+.switch input:checked + .switch-track::after { transform: translateX(18px); }
+.switch input:focus-visible + .switch-track { box-shadow: 0 0 0 4px var(--brand-soft); }
+.switch input:disabled + .switch-track { opacity: .5; cursor: not-allowed; }
+.switch-text { font-size: 12.5px; font-weight: 600; white-space: nowrap; min-width: 3.25em; }
+.switch-text.is-on { color: var(--ok); }
+.switch-text.is-off { color: var(--ink-faint); }
+
+/* Narrow screens: collapse each account table into a stack of per-user cards. */
+@media (max-width: 768px) {
+  .user-group-head { padding: 14px; }
+  .user-group-body { padding: 12px; }
+  .user-subgroup > .user-group-body { padding: 0; }
+
+  .users-acct-table,
+  .users-acct-table thead,
+  .users-acct-table tbody,
+  .users-acct-table tr,
+  .users-acct-table td { display: block; }
+  .users-acct-table thead { display: none; }
+  .users-acct-table tbody tr {
+    margin: 0 0 12px;
+    padding: 12px 14px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+  .users-acct-table tbody tr:hover td { background: transparent; }
+  .users-acct-table tbody td {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 9px 2px;
+    border-bottom: 1px solid var(--line);
+    text-align: end;
+    white-space: normal;
+    word-break: break-word;
+  }
+  .users-acct-table tbody td:last-child { border-bottom: 0; }
+  .users-acct-table tbody td::before {
+    content: attr(data-label);
+    flex: 0 0 auto;
+    font-weight: 600;
+    color: var(--ink-soft);
+    text-align: start;
+  }
+  .users-acct-table tbody td[data-label="שם"] { font-size: 16px; font-weight: 700; }
+  .users-acct-table tbody td.u-email { word-break: break-all; }
+  .users-acct-table tbody td select,
+  .users-acct-table tbody td .target-input { flex: 1 1 auto; min-width: 0; max-width: none; }
+  .users-acct-table tbody td .row-actions { flex: 1 1 100%; flex-wrap: wrap; justify-content: flex-end; }
+}
+
+/* ============================================================
+   Global mobile pass (≤768px)
+   Final responsive layer covering the components not already
+   collapsed to cards: the remaining tabular tables (forms,
+   stations, roster, tutors) scroll horizontally instead of being
+   clipped, every form control is sized to avoid iOS focus-zoom,
+   and typography / spacing tighten on small phones. Layered after
+   all earlier rules so it wins on narrow viewports.
+   ============================================================ */
+@media (max-width: 768px) {
+  /* ---- Wide tables that stay tabular ----
+     .table-card clips overflow (overflow: hidden) so a table wider than the
+     phone would be cut off. These tabular tables have no card-collapse rules
+     (unlike the users-accounts and roles-permissions tables), so let their
+     card scroll sideways and give each a min-width that keeps columns legible
+     and touch-scrollable rather than crushed. */
+  #tab-forms .table-card,
+  #tab-stations .table-card,
+  #tab-roster .table-card {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  #tab-forms .forms-table,
+  #tab-forms .missing-forms-table { min-width: 640px; }
+  #tab-stations .stations-table { min-width: 520px; }
+  #tab-roster .roster-table,
+  #tab-roster .tutors-roster-table { min-width: 430px; }
+
+  /* ---- Form controls ----
+     Bump every text field / dropdown to 16px on touch screens. Below 16px
+     mobile Safari force-zooms the whole page on focus, which is exactly the
+     "desktop zooming" the layout should avoid; 16px keeps controls readable
+     and stops the zoom. */
+  .field input, .field select,
+  .slot select, .slot input,
+  .station-form input, .station-form select,
+  .lock-form input, .lock-form select,
+  .add-shift-field input, .add-shift-field select,
+  .forms-toolbar input, .forms-toolbar select,
+  .users-table select, .users-acct-table select,
+  .combo-input, .target-input, .role-quota-input,
+  .aa-week-input {
+    font-size: 16px;
+  }
+}
+
+/* ---- Fine typography + spacing for small phones (≤560px) ---- */
+@media (max-width: 560px) {
+  body { font-size: 14.5px; }
+  .topbar { padding: 10px 14px; gap: 10px 14px; }
+  .topbar-title { font-size: 16px; }
+  .tab-panel { padding: 18px 13px 46px; }
+  .page-title { font-size: 21px; }
+  .page-sub { font-size: 13px; }
+  .month-label { font-size: 17px; min-width: 0; }
+  .btn { padding: 10px 14px; font-size: 13.5px; }
+  .nav-tab { padding: 9px 14px; font-size: 14px; }
+  .detail-head { padding: 14px 16px; }
+  .detail-head h3 { font-size: 18px; }
+  .shifts { padding: 16px 14px 20px; }
+  .shift-acc-trigger { padding: 14px 15px; }
+  .shift-acc-title { font-size: 16px; }
+  .shift-acc-inner { padding: 12px; gap: 12px; }
+  .login-card { padding: 26px 20px 24px; }
+  .login-brand { gap: 12px; margin-bottom: 20px; }
+  .login-brand h1 { font-size: 20px; }
+  .login-cross { width: 48px; height: 48px; }
+}
+
+/* ============================================================
+   Final upgrade block — trainee stages, swap marketplace,
+   monthly preferences calendar, and the admin analytics dashboard.
+   ============================================================ */
+
+/* --- Trainee certification-stage dropdown (users table) --- */
+.stage-select {
+  min-width: 172px;
+  padding: 7px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--field-bg);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 13px;
+}
+
+/* --- Admin analytics dashboard --- */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 22px;
+}
+.kpi-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 22px 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+.kpi-value {
+  font-family: var(--display);
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--brand);
+}
+.kpi-label { font-size: 14px; color: var(--ink-soft); }
+
+.dash-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 22px;
+}
+.dash-card {
+  padding: 18px 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+.dash-card-title {
+  margin: 0 0 12px;
+  font-family: var(--display);
+  font-size: 17px;
+  color: var(--ink);
+}
+.leaderboard { list-style: none; margin: 0; padding: 0; counter-reset: lb; }
+.leaderboard li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 4px;
+  border-bottom: 1px solid var(--line);
+}
+.leaderboard li:last-child { border-bottom: 0; }
+.leaderboard li::before {
+  counter-increment: lb;
+  content: counter(lb);
+  flex: 0 0 auto;
+  width: 24px; height: 24px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: var(--brand-soft);
+  color: var(--brand-deep);
+  font-size: 12px; font-weight: 700;
+}
+.leaderboard .lb-name { flex: 1 1 auto; color: var(--ink); }
+.leaderboard .lb-count {
+  flex: 0 0 auto;
+  font-weight: 700;
+  color: var(--brand);
+  font-variant-numeric: tabular-nums;
+}
+.leaderboard-empty { color: var(--ink-faint); padding: 10px 4px; }
+.leaderboard-empty::before { content: none; }
+
+/* --- Swap marketplace --- */
+.swap-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+.dash-swaps .swap-list { margin-top: 4px; }
+.swap-empty { color: var(--ink-faint); padding: 8px 2px; }
+.swap-card {
+  padding: 16px 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-inline-start: 4px solid var(--line-strong);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.swap-card.swap-open      { border-inline-start-color: var(--brand); }
+.swap-card.swap-pending   { border-inline-start-color: var(--gold); }
+.swap-card.swap-approved  { border-inline-start-color: var(--ok); }
+.swap-card.swap-cancelled,
+.swap-card.swap-rejected  { border-inline-start-color: var(--danger); }
+.swap-card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.swap-when { font-weight: 700; color: var(--ink); }
+.swap-badge {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.swap-badge.swap-open      { background: var(--brand-soft); color: var(--brand-deep); }
+.swap-badge.swap-pending   { background: var(--gold-soft);  color: var(--gold); }
+.swap-badge.swap-approved  { background: var(--ok-soft);    color: var(--ok); }
+.swap-badge.swap-cancelled,
+.swap-badge.swap-rejected  { background: var(--danger-soft); color: var(--danger-deep); }
+.swap-badge.swap-direct     { background: var(--paper-2); color: var(--ink-soft); }
+.swap-badge.swap-direct-you { background: var(--brand-deep); color: #fff; }
+.swap-card-body { display: flex; flex-direction: column; gap: 4px; }
+.swap-place { font-weight: 600; color: var(--ink); }
+.swap-people { font-size: 13px; color: var(--ink-soft); }
+.swap-approvals { display: flex; flex-direction: column; gap: 3px; margin-top: 2px; }
+.swap-approval {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12.5px;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+.swap-approval-label { color: var(--ink-soft); }
+.swap-approval-state { font-weight: 700; }
+.swap-approval.is-approved { background: var(--ok-soft); }
+.swap-approval.is-approved .swap-approval-state { color: var(--ok); }
+.swap-approval.is-pending { background: var(--gold-soft); }
+.swap-approval.is-pending .swap-approval-state { color: var(--gold); }
+.swap-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.forms-swap { white-space: nowrap; }
+
+/* Placement / regional deployment notes tab. */
+.placement-admin { margin-bottom: 20px; }
+.placement-admin .placement-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  margin-bottom: 12px;
+}
+.placement-admin textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  resize: vertical;
+  margin-bottom: 12px;
+}
+.placement-admin textarea:focus { outline: none; border-color: var(--brand); }
+.placement-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+.placement-card {
+  padding: 16px 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-inline-start: 4px solid var(--brand);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.placement-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.placement-who { font-weight: 700; color: var(--ink); }
+.placement-week {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--brand-soft);
+  color: var(--brand-deep);
+}
+.placement-text { color: var(--ink); line-height: 1.5; }
+.placement-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* Inline targeted-deployment banner inside the day-detail schedule view. */
+.placement-day-banner {
+  margin: 4px 0 14px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-inline-start: 4px solid var(--brand);
+  border-radius: var(--radius);
+  background: var(--brand-soft);
+}
+.placement-day-title {
+  font-weight: 700;
+  color: var(--brand-deep);
+  margin-bottom: 6px;
+}
+.placement-day-note { color: var(--ink); line-height: 1.5; margin: 2px 0; }
+
+/* "משוב על דיווח טפסים" compliance indicator — the trainee's shift-form status
+   bridged into the placement view. Colour follows the state: submitted = green,
+   pending = amber, volunteer/no-form = neutral, none = muted. */
+.placement-form-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.placement-form-label { font-size: 12.5px; font-weight: 600; color: var(--ink-soft); }
+.placement-form-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--ink);
+  vertical-align: middle;
+}
+.placement-day-note .placement-form-badge { margin-inline-start: 8px; }
+.placement-form-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ink-soft);
+  flex: none;
+}
+.placement-form-badge.is-submitted {
+  background: var(--ok-soft); color: var(--ok); border-color: var(--ok);
+}
+.placement-form-badge.is-submitted .placement-form-dot { background: var(--ok); }
+.placement-form-badge.is-pending {
+  background: #fdf0d5; color: #a86a00; border-color: #e0b25a;
+}
+.placement-form-badge.is-pending .placement-form-dot { background: #d98a00; }
+.placement-form-badge.is-volunteer {
+  background: var(--brand-soft); color: var(--brand-deep); border-color: var(--brand);
+}
+.placement-form-badge.is-volunteer .placement-form-dot { background: var(--brand); }
+[data-theme="dark"] .placement-form-badge.is-pending {
+  background: rgba(217,138,0,.16); color: #f0c063; border-color: rgba(217,138,0,.5);
+}
+
+/* Inline Head-to-Head picker inside the "My Shifts" swap cell. */
+.swap-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  min-inline-size: 200px;
+}
+.swap-picker-select {
+  inline-size: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: inherit;
+  background: var(--paper);
+  color: var(--ink);
+}
+.swap-picker-actions { display: flex; gap: 8px; }
+.swap-picker-loading { margin: 0; font-size: 13px; color: var(--ink-soft); }
+
+/* --- Swap-request modal (opened from "המשמרות שלי") --- */
+.swap-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.45);
+}
+.swap-modal {
+  inline-size: min(420px, 100%);
+  max-block-size: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 22px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: var(--shadow-md, 0 12px 40px rgba(0, 0, 0, 0.25));
+}
+.swap-modal-title { margin: 0; font-size: 17px; }
+.swap-modal-sub { margin: 0; font-size: 13px; color: var(--ink-soft); }
+.swap-modal-modes { display: flex; flex-direction: column; gap: 8px; }
+.swap-modal-mode {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  cursor: pointer;
+}
+.swap-modal-mode input { margin: 0; }
+.swap-modal-direct { display: flex; flex-direction: column; gap: 8px; }
+/* The author `display: flex` above overrides the UA `[hidden] { display: none }`,
+   so `hidden` alone would NOT hide the direct-swap dropdowns in public-board mode.
+   Restore the intended behaviour explicitly. */
+.swap-modal-direct[hidden] { display: none; }
+.swap-modal-field-label { font-size: 13px; color: var(--ink-soft); }
+.swap-modal-actions { display: flex; gap: 8px; justify-content: flex-start; }
+
+/* --- Trainee certification-progress tracker (schedule tab) --- */
+.trainee-progress {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 20px 22px;
+  margin-bottom: 24px;
+}
+.trainee-progress-head { margin-bottom: 16px; }
+.trainee-progress-title {
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 4px;
+}
+.trainee-progress-sub { font-size: 13px; color: var(--ink-soft); margin: 0; }
+
+.progress-bar {
+  position: relative;
+  block-size: 8px;
+  border-radius: 999px;
+  background: var(--paper-2);
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+/* Bar + explicit percentage label sit on one row so the number reads beside the
+   fill. The bar keeps its own bottom margin, so zero it here to align them. */
+.progress-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.progress-bar-row .progress-bar { flex: 1; margin-bottom: 0; }
+.progress-bar-pct {
+  flex: none;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--brand-deep);
+  min-inline-size: 3ch;
+  text-align: end;
+}
+.progress-bar-fill {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--brand-deep), var(--brand));
+  transition: inline-size .35s ease;
+}
+
+.progress-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.progress-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+.progress-step-dot {
+  flex: 0 0 auto;
+  inline-size: 26px;
+  block-size: 26px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 700;
+  background: var(--paper-2);
+  color: var(--ink-faint);
+  border: 1px solid var(--line-strong);
+}
+.progress-step-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.progress-step-name { font-weight: 700; font-size: 14px; color: var(--ink); }
+.progress-step-desc { font-size: 12px; color: var(--ink-soft); }
+.progress-step-count { font-size: 12px; font-weight: 600; color: var(--brand-deep); margin-block-start: 2px; }
+.progress-step.is-done .progress-step-count { color: var(--ok); }
+.progress-step.is-upcoming .progress-step-count { color: var(--ink-soft); font-weight: 500; }
+
+.progress-step.is-done { border-color: var(--ok); background: var(--ok-soft); }
+.progress-step.is-done .progress-step-dot { background: var(--ok); color: #fff; border-color: var(--ok); }
+.progress-step.is-current { border-color: var(--brand); background: var(--brand-soft); box-shadow: 0 0 0 2px rgba(var(--brand-rgb), .18); }
+.progress-step.is-current .progress-step-dot { background: var(--brand); color: #fff; border-color: var(--brand); }
+.progress-step.is-current .progress-step-name { color: var(--brand-deep); }
+.progress-step.is-upcoming { opacity: .78; }
+
+@media (max-width: 720px) {
+  .progress-steps { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 460px) {
+  .progress-steps { grid-template-columns: 1fr; }
+}
+
+/* --- External (non-registered) scheduled name — monthly matrix --- */
+.mx-ext-badge {
+  flex: 0 0 auto;
+  margin-inline-start: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--gold-soft);
+  color: var(--gold);
+  border: 1px solid var(--gold);
+}
+.mx-slot.is-external .mx-slot-pick {
+  border-color: var(--gold);
+  background: var(--gold-soft);
+}
+.mx-slot.is-external .mx-slot-name { color: var(--gold); }
+.matrix-create-item { border-style: dashed; border-color: var(--gold); color: var(--gold); }
+.matrix-create-item:hover { background: var(--gold-soft); border-color: var(--gold); }
+.assign-item-tag.matrix-ext-tag { background: var(--gold-soft); color: var(--gold); }
+
+/* ==========================================================================
+   Mobile responsive hardening patch
+   Fixes horizontal-overflow zoom-out, cramped topbar, clipped calendar, and
+   the off-canvas monthly matrix / scheduling tables on phones. This block is
+   intentionally last so it wins the cascade over earlier mobile rules.
+   ========================================================================== */
+
+/* Root-cause guard: any single element wider than the viewport makes the
+   browser shrink the whole page to fit (the "zoomed-out desktop" symptom).
+   Clip stray horizontal overflow at the document level; wide tables keep their
+   own inner scroll containers, so nothing scrollable is lost. Scoped to <html>
+   (not <body>) so it stays the scroll container and the sticky topbar keeps
+   sticking. */
+html { overflow-x: hidden; }
+body { max-width: 100%; }
+
+@media (max-width: 768px) {
+  /* ---- 1. Header & navigation ---- */
+  .topbar {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+    padding: 12px 14px;
+  }
+  .topbar-brand { margin-inline-end: 0; justify-content: center; }
+  .topbar-user { margin-inline-start: 0; justify-content: center; }
+  /* Tabs become a clean, swipeable horizontal strip that never wraps. */
+  .main-nav {
+    order: 3;
+    width: 100%;
+    max-width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav-tab { flex: 0 0 auto; white-space: nowrap; }
+
+  /* ---- 2. Calendar grid ---- */
+  .calendar-wrap {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    padding: 10px;
+  }
+  /* Day boxes shrink to stay fully inside the 7-column track. */
+  .calendar-weekdays, .calendar-grid { gap: 4px; }
+  .day-cell { min-height: 52px; padding: 5px; overflow: hidden; }
+  .day-num { font-size: 14px; }
+
+  /* ---- 3. Scheduling table / monthly matrix ---- */
+  /* The heavy tables swipe left/right inside their own container instead of
+     dragging the whole page canvas past the viewport edge. */
+  .matrix-wrap {
+    width: 100%;
+    max-width: 100%;
+  }
+  .matrix-scroll {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* Card-wrapped tables (forms, stations, roster) scroll sideways instead of
+     clipping columns. The #tab-users accounts table and the roles matrix are
+     unaffected: they reflow into stacked cards (display:block; min-width:0),
+     so overflow-x:auto simply produces no scrollbar for them. */
+  .table-card {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* Keep table inputs on a single line so the swipeable row height stays sane. */
+  .matrix-wrap input,
+  .table-card table input,
+  .table-card table select {
+    box-sizing: border-box;
+    line-height: normal;
+  }
+}
+
+/* ---- Trainee Schedule View ---- */
+.trainee-view-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.trainee-selector-wrap {
+  margin-bottom: 24px;
+  max-width: 320px;
+}
+
+.trainee-selector-field {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.trainee-selector-field > .field {
+  flex: 1 1 auto;
+}
+
+.trainee-view-edit-toggle {
+  flex: 0 0 auto;
+  padding-block-end: 2px;
+}
+
+.trainee-view-select {
+  width: 100%;
+}
+
+.trainee-schedule-table {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 20px;
+}
+
+.trainee-schedule-grid {
+  min-width: 100%;
+  display: inline-block;
+}
+
+.schedule-grid-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.schedule-grid-table thead {
+  background: var(--paper-2);
+  font-weight: 700;
+  text-align: right;
+  direction: rtl;
+}
+
+.schedule-grid-table th {
+  padding: 12px 14px;
+  border-bottom: 2px solid var(--line-strong);
+  font-size: 14px;
+  color: var(--ink);
+  font-weight: 700;
+  text-align: right;
+}
+
+.schedule-grid-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  text-align: center;
+  font-size: 14px;
+}
+
+.schedule-grid-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.schedule-grid-table .col-date {
+  min-width: 100px;
+  text-align: right;
+}
+
+.schedule-grid-table .col-weekday {
+  min-width: 80px;
+  text-align: right;
+}
+
+.schedule-grid-table .col-shift {
+  min-width: 90px;
+  font-size: 13px;
+}
+
+/* Constraint columns — narrow columns for preferences */
+.schedule-grid-table .col-constraint {
+  min-width: 60px;
+  font-size: 12px;
+  background-color: #f5f5f5;
+  color: var(--ink-soft);
+  padding: 10px 8px;
+}
+
+.schedule-grid-table .col-constraint-night {
+  background-color: #f0f4f8;
+}
+
+.schedule-grid-table .col-constraint-morning {
+  background-color: #fffbf0;
+}
+
+.schedule-grid-table .col-constraint-evening {
+  background-color: #fef5f5;
+}
+
+html[data-theme="dark"] .schedule-grid-table .col-constraint {
+  background-color: #2a2a2a;
+  color: var(--ink-soft);
+}
+
+html[data-theme="dark"] .schedule-grid-table .col-constraint-night {
+  background-color: #1a2530;
+}
+
+html[data-theme="dark"] .schedule-grid-table .col-constraint-morning {
+  background-color: #2a2820;
+}
+
+html[data-theme="dark"] .schedule-grid-table .col-constraint-evening {
+  background-color: #2a1a1a;
+}
+
+/* Default background colors for shift columns (RTL-aware) */
+.schedule-grid-table .col-night {
+  background-color: #d8e9f5;
+}
+
+.schedule-grid-table .col-morning {
+  background-color: #fff9e6;
+}
+
+.schedule-grid-table .col-evening {
+  background-color: #fde3e3;
+}
+
+/* Assigned shift cell — vibrant green highlight */
+.schedule-grid-table td.shift-assigned {
+  background-color: #4ade80 !important;
+  color: #fff;
+  font-weight: 600;
+}
+
+.schedule-grid-table td.is-editable {
+  cursor: pointer;
+}
+
+.schedule-grid-table td.is-editable:hover {
+  box-shadow: inset 0 0 0 2px rgba(34, 197, 94, 0.45);
+}
+
+html[data-theme="dark"] .schedule-grid-table .col-night {
+  background-color: #1e3a5f;
+}
+
+html[data-theme="dark"] .schedule-grid-table .col-morning {
+  background-color: #3d3a1a;
+}
+
+html[data-theme="dark"] .schedule-grid-table .col-evening {
+  background-color: #4a1f1f;
+}
+
+html[data-theme="dark"] .schedule-grid-table td.shift-assigned {
+  background-color: #22c55e !important;
+  color: #fff;
+}
+
+.trainee-schedule-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--ink-soft);
+  font-size: 16px;
+}
+
+/* ---- Mobile layout for trainee view ---- */
+@media (max-width: 640px) {
+  .trainee-schedule-grid {
+    font-size: 12px;
+  }
+
+  .schedule-grid-table th,
+  .schedule-grid-table td {
+    padding: 8px 10px;
+  }
+
+  .schedule-grid-table .col-date {
+    min-width: 85px;
+  }
+
+  .schedule-grid-table .col-weekday {
+    min-width: 70px;
+  }
+
+  .schedule-grid-table .col-shift {
+    min-width: 75px;
+  }
+}
+
+/* ---- Mobile navigation dropdown ----
+   On narrow viewports the horizontal tab strip is too wide and breaks the
+   header layout, so it is hidden entirely and replaced by a compact, centered
+   <select>. Placed last so it overrides the earlier 768px .main-nav rules. */
+@media (max-width: 768px) {
+  .main-nav { display: none !important; }
+
+  .nav-mobile-select {
+    display: block;
+    order: 3;
+    width: 100%;
+    max-width: 320px;
+    margin: 4px auto 0;
+    padding: 11px 14px;
+    text-align: center;
+    text-align-last: center;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--surface-2);
+    border: 1px solid var(--line-strong);
+    border-radius: 12px;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .nav-mobile-select:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+}
+
