@@ -22,7 +22,8 @@
     "drizzle-orm": "^1.0.0-rc.4-5d5b77c",
     "nodemailer": "^6.9.7",
     "postgres": "^3.4.9",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "@vitejs/plugin-react": "^6.0.3"
   },
   "devDependencies": {
     "@types/node": "^26.1.0",
