@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <script>document.title = "אתר שיבוצים מדא רמת גן";</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>אתר שיבוצים מדא רמת גן</title>
+  <meta name="description" content="מערכת לשיבוץ משמרות חודשי והקצאת חניכים — ניהול צוותי אמבולנס" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./assets/css/styles.css" />
+  <link rel="icon" type="image/png" href="assets/img/station-logo.png?v=6" />
+  <link rel="apple-touch-icon" href="assets/img/station-logo.png?v=6" />
+  <script>
+    /* Apply the saved (or system-preferred) theme before first paint to avoid a flash. */
+    (function () {
+      try {
+        var raw = localStorage.getItem("sss_theme");
+        var t = raw ? JSON.parse(raw) : null;
+        if (t !== "dark" && t !== "light") {
+          t = (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+        }
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) { /* ignore — defaults to light */ }
+    })();
+  </script>
+</head>
+<body>
+  <!-- ============ IMPERSONATION ("VIEW AS") BANNER ============ -->
+  <!-- Pinned to the very top while an admin previews the app as another user.
+       The whole bar is a button: clicking it exits impersonation. -->
+  <button type="button" id="impersonation-banner" class="impersonation-banner" hidden></button>
+
+  <!-- ============ LOGIN VIEW ============ -->
+  <main id="login-view" class="login-view" aria-hidden="false">
+    <div class="login-aurora" aria-hidden="true"></div>
+    <section class="login-card">
+      <button type="button" class="theme-toggle login-theme-toggle" data-theme-toggle aria-label="החלפת מצב תצוגה"></button>
+      <div class="login-brand">
+        <img src="assets/img/station-logo.png" alt="לוגו התחנה" class="login-logo" style="max-height: 90px; width: auto; object-fit: contain; background: transparent;" />
+        <div>
+          <h1>אתר שיבוצים מדא רמת גן</h1>
+          <p>ניהול שיבוצים, מעקב טפסים והערות מרחב דן - תחנת רמת גן</p>
+        </div>
+      </div>
+
+      <form id="login-form" class="login-form" novalidate>
+        <label class="field">
+          <span>כתובת דוא״ל</span>
+          <input type="email" id="login-email" autocomplete="username" placeholder="name@mda.com" dir="ltr" required />
+        </label>
+        <label class="field">
+          <span>סיסמה</span>
+          <input type="password" id="login-password" autocomplete="current-password" placeholder="••••••••" dir="ltr" required />
+        </label>
+        <p id="login-error" class="login-error" role="alert" hidden></p>
+        <p id="login-notice" class="login-notice" role="status" hidden></p>
+        <p class="login-forgot">
+          <button type="button" id="show-forgot" class="link-btn">שכחת סיסמה?</button>
+        </p>
+        <button type="submit" class="btn btn-primary btn-block">כניסה למערכת</button>
+        <p class="login-switch">
+          <button type="button" id="show-register" class="link-btn">אין לך חשבון? להרשמה באתר</button>
+        </p>
+      </form>
+
+      <form id="register-form" class="login-form" novalidate hidden>
+        <label class="field">
+          <span>שם מלא</span>
+          <input type="text" id="register-name" autocomplete="name" placeholder="שם מלא" required />
+        </label>
+        <label class="field">
+          <span>כתובת דוא״ל</span>
+          <input type="email" id="register-email" autocomplete="email" placeholder="name@mda.com" dir="ltr" required />
+        </label>
+        <label class="field">
+          <span>סיסמה</span>
+          <input type="password" id="register-password" autocomplete="new-password" placeholder="••••••••" dir="ltr" required />
+        </label>
+        <p id="register-error" class="login-error" role="alert" hidden></p>
+        <button type="submit" class="btn btn-primary btn-block">הרשם</button>
+        <p class="login-switch">
+          <button type="button" id="show-login" class="link-btn">כבר רשום במערכת? להתחברות</button>
+        </p>
+      </form>
+
+      <!-- Forgot password: collect the email and trigger the recovery mail. -->
+      <form id="forgot-form" class="login-form" novalidate hidden>
+        <div class="login-form-intro">
+          <h2 class="login-form-title">איפוס סיסמה</h2>
+          <p class="login-form-sub">הזינו את כתובת הדוא״ל של החשבון ונשלח אליכם קישור לבחירת סיסמה חדשה.</p>
+        </div>
+        <label class="field">
+          <span>כתובת דוא״ל</span>
+          <input type="email" id="forgot-email" autocomplete="email" placeholder="name@mda.com" dir="ltr" required />
+        </label>
+        <p id="forgot-error" class="login-error" role="alert" hidden></p>
+        <p id="forgot-notice" class="login-notice" role="status" hidden></p>
+        <button type="submit" class="btn btn-primary btn-block">שליחת קישור איפוס</button>
+        <p class="login-switch">
+          <button type="button" id="forgot-back" class="link-btn">חזרה להתחברות</button>
+        </p>
+      </form>
+
+      <!-- Reset password: shown when the user arrives via /reset-password?token=… -->
+      <form id="reset-form" class="login-form" novalidate hidden>
+        <div class="login-form-intro">
+          <h2 class="login-form-title">בחירת סיסמה חדשה</h2>
+          <p class="login-form-sub">הזינו סיסמה חדשה לחשבונכם. הסיסמה חייבת לכלול לפחות 6 תווים.</p>
+        </div>
+        <label class="field">
+          <span>סיסמה חדשה</span>
+          <input type="password" id="reset-password" autocomplete="new-password" placeholder="••••••••" dir="ltr" required />
+        </label>
+        <label class="field">
+          <span>אימות הסיסמה</span>
+          <input type="password" id="reset-password-confirm" autocomplete="new-password" placeholder="••••••••" dir="ltr" required />
+        </label>
+        <p id="reset-error" class="login-error" role="alert" hidden></p>
+        <p id="reset-notice" class="login-notice" role="status" hidden></p>
+        <button type="submit" class="btn btn-primary btn-block">עדכון הסיסמה</button>
+        <p class="login-switch">
+          <button type="button" id="reset-back" class="link-btn">חזרה להתחברות</button>
+        </p>
+      </form>
+
+      <!-- Email verification result: shown when arriving via /verify-email?token=… -->
+      <section id="verify-panel" class="login-form login-verify" hidden>
+        <div class="login-form-intro">
+          <h2 class="login-form-title" id="verify-title">אימות כתובת הדוא״ל</h2>
+          <p class="login-form-sub" id="verify-message">מאמת את כתובת הדוא״ל שלך…</p>
+        </div>
+        <button type="button" id="verify-continue" class="btn btn-primary btn-block">המשך להתחברות</button>
+      </section>
+    </section>
+  </main>
+
+  <!-- ============ APP SHELL ============ -->
+  <div id="app-view" class="app-view" hidden>
+    <header class="topbar">
+      <div class="topbar-brand">
+        <span class="topbar-cross" aria-hidden="true">
+          <img src="assets/img/station-logo.png" alt="לוגו התחנה" class="topbar-logo" style="max-height: 40px; width: auto; object-fit: contain; vertical-align: middle; background: transparent;" />
+        </span>
+        <span class="topbar-title">שיבוץ משמרות</span>
+      </div>
+
+      <nav id="main-nav" class="main-nav" aria-label="ניווט ראשי">
+        <button type="button" class="nav-tab" data-tab="dashboard" id="nav-dashboard-tab" hidden>לוח בקרה</button>
+        <button type="button" class="nav-tab is-active" data-tab="schedule" id="nav-schedule-tab">לוח שיבוצים</button>
+        <button type="button" class="nav-tab" data-tab="monthly" id="nav-monthly-tab">שיבוץ חודשי</button>
+        <button type="button" class="nav-tab" data-tab="engine" id="nav-engine-tab">שיבוץ מבוסס AI</button>
+        <button type="button" class="nav-tab" data-tab="forms" id="nav-forms-tab">המשמרות שלי</button>
+        <button type="button" class="nav-tab" data-tab="tracking" id="nav-tracking-tab" hidden>מעקב ביצוע טפסים</button>
+        <button type="button" class="nav-tab" data-tab="placement" id="nav-placement-tab">הערות שיבוץ</button>
+        <button type="button" class="nav-tab" data-tab="trainee-view" id="nav-trainee-view-tab" hidden>צפייה בסידור לחניך</button>
+        <button type="button" class="nav-tab" data-tab="weekly" id="nav-weekly-tab">הגשת אילוצים שבועית</button>
+        <button type="button" class="nav-tab" data-tab="users" id="nav-users-tab">ניהול משתמשים והרשאות</button>
+        <button type="button" class="nav-tab" data-tab="stations" id="nav-stations-tab">ניהול תחנות ומשמרות</button>
+        <button type="button" class="nav-tab" data-tab="roster" id="nav-roster-tab">ניהול סגל ורשימות</button>
+      </nav>
+
+      <!-- Mobile-only navigation. Mirrors the tab buttons above as a compact
+           <select>; hidden on desktop and populated at runtime from the visible
+           tabs so it always reflects the same role-based visibility. -->
+      <select id="nav-mobile-select" class="nav-mobile-select" aria-label="ניווט ראשי"></select>
+
+      <div class="topbar-user">
+        <div class="user-meta">
+          <span id="user-name" class="user-name"></span>
+          <span id="user-role-badge" class="role-badge"></span>
+        </div>
+
+        <!-- Notification center ("מרכז התראות"). The bell sits inline in the user
+             action cluster, between the profile text and the theme toggle. Clicking
+             it opens a scrollable dropdown of recent notifications with an unread
+             badge and a "mark all as read" control. -->
+        <div class="notif" id="notif-wrap">
+          <button type="button" id="notif-bell" class="notif-bell" aria-haspopup="true" aria-expanded="false" aria-label="מרכז התראות">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 22a2.2 2.2 0 0 0 2.2-2.1H9.8A2.2 2.2 0 0 0 12 22Zm6.5-6.2V11c0-3.1-1.7-5.6-4.5-6.3v-.7a1.9 1.9 0 1 0-3.9 0v.7C7.2 5.4 5.5 7.9 5.5 11v4.8L4 17.3v.8h16v-.8Z" fill="currentColor"/></svg>
+            <span id="notif-badge" class="notif-badge" hidden>0</span>
+          </button>
+          <div id="notif-panel" class="notif-panel" role="dialog" aria-label="התראות" hidden>
+            <div class="notif-head">
+              <span class="notif-title">מרכז התראות</span>
+              <button type="button" id="notif-mark-all" class="notif-markall">סמן הכל כנקרא</button>
+            </div>
+            <!-- Admin broadcast composer — visible to managers only. -->
+            <form id="notif-broadcast" class="notif-broadcast" hidden>
+              <textarea id="notif-broadcast-msg" class="notif-broadcast-input" rows="2" placeholder="שליחת הודעה לכל המשתלמים…" maxlength="500"></textarea>
+              <button type="submit" class="btn btn-primary btn-block notif-broadcast-send">שליחת הודעה כללית</button>
+            </form>
+            <div id="notif-list" class="notif-list" aria-live="polite"></div>
+          </div>
+        </div>
+
+        <button type="button" id="context-toggle" class="context-toggle" hidden></button>
+        <button type="button" class="theme-toggle" data-theme-toggle aria-label="החלפת מצב תצוגה"></button>
+        <button type="button" id="logout-btn" class="btn btn-ghost">יציאה</button>
+      </div>
+    </header>
+
+    <!-- ---- SCHEDULE TAB ---- -->
+    <main id="tab-schedule" class="tab-panel" role="region" aria-label="לוח שיבוצים">
+      <!-- Trainee certification-progress tracker (trainees only; hidden for staff). -->
+      <section id="trainee-progress" class="trainee-progress" aria-label="סטטוס התקדמות בהסמכה" hidden></section>
+      <div class="page-head">
+        <div>
+          <h2 class="page-title">לוח שיבוצים חודשי</h2>
+        </div>
+        <div class="month-nav">
+          <button type="button" id="prev-month" class="btn btn-circle" aria-label="חודש קודם">‹</button>
+          <span id="month-label" class="month-label"></span>
+          <button type="button" id="next-month" class="btn btn-circle" aria-label="חודש הבא">›</button>
+        </div>
+      </div>
+
+      <div class="calendar-wrap">
+        <div class="calendar-weekdays" id="calendar-weekdays" aria-hidden="true"></div>
+        <div class="calendar-grid" id="calendar-grid"></div>
+      </div>
+
+      <section id="day-detail" class="day-detail" hidden></section>
+    </main>
+
+    <!-- ---- ADMIN DASHBOARD TAB (admin only) ---- -->
+    <main id="tab-dashboard" class="tab-panel" role="region" aria-label="לוח בקרה" hidden>
+      <div class="page-head">
+        <div>
+          <h2 class="page-title">לוח בקרה</h2>
+          <p class="page-sub">מבט-על ניהולי: נתוני החודש הנוכחי, מובילים, ובקשות החלפה הממתינות לאישורך.</p>
+        </div>
+        <button type="button" id="dashboard-refresh" class="btn btn-ghost">רענון</button>
+      </div>
+      <section class="kpi-row" id="dashboard-kpis"></section>
+      <section class="dash-grid">
+        <div class="dash-card">
+          <h3 class="dash-card-title">חניכים מובילים (משמרות שהושלמו)</h3>
+          <ol class="leaderboard" id="dash-top-trainees"></ol>
+        </div>
+        <div class="dash-card">
+          <h3 class="dash-card-title">פראמדיקים עם הכי הרבה טפסים פתוחים</h3>
+          <ol class="leaderboard" id="dash-top-medics"></ol>
+        </div>
+      </section>
+    </main>
+
+    <!-- ---- MONTHLY MATRIX TAB (admin only) ---- -->
+    <main id="tab-monthly" class="tab-panel" role="region" aria-label="שיבוץ חודשי" hidden>
+      <!-- Top-of-page edit-mode indicator: shown only while Edit Mode is active
+           (see renderMatrix), otherwise fully hidden. Sits where the old
+           view-only banner used to be. -->
+      <p id="matrix-edit-banner" class="matrix-edit-banner" hidden>מצב עריכה פעיל</p>
+      <div class="page-head">
+        <div>
+          <h2 class="page-title">שיבוץ חודשי</h2>
+          <p class="page-sub">מבט-על על כל החודש: כל יום בשורה, כל תחנה בעמודה. במצב עריכה אפשר ללחוץ על תא חניך/ה כדי לשבץ במהירות לפי הזמינות שהוגשה, ועל אייקון המחיקה בתוך התא כדי להסיר את תחנת אותו יום בלבד. כל שינוי נשמר מיד ומופיע ב“המשמרות שלי” של החניך/ה.</p>
+        </div>
+        <div class="month-nav">
+          <button type="button" id="matrix-prev-month" class="btn btn-circle" aria-label="חודש קודם">‹</button>
+          <span id="matrix-month-label" class="month-label"></span>
+          <button type="button" id="matrix-next-month" class="btn btn-circle" aria-label="חודש הבא">›</button>
+        </div>
+      </div>
+
+      <div class="matrix-wrap" id="matrix-wrap"></div>
+    </main>
+
+    <!-- ---- AUTOMATED SCHEDULING ENGINE TAB (admin) ---- -->
+    <main id="tab-engine" class="tab-panel" role="region" aria-label="שיבוץ מבוסס AI" hidden>
+      <div class="page-head">
+        <div>
+          <h2 class="page-title">שיבוץ מבוסס AI</h2>
+          <p class="page-sub">משבץ אוטומטית מלווים למשבצות מלווה 1 / מלווה 2 הפנויות לפי העדפות הזמינות שהוגשו והיעד השבועי האישי. המנוע מעדיף קודם משמרות שסומנו “מעדיף”, פונה ל“מעדיף שלא” רק כמוצא אחרון, ולעולם אינו משבץ ל“לא יכול”. שיבוצים קיימים נשמרים.</p>
+        </div>
+        <div class="month-nav">
+          <button type="button" id="engine-prev-month" class="btn btn-circle" aria-label="חודש קודם">‹</button>
+          <span id="engine-month-label" class="month-label"></span>
+          <button type="button" id="engine-next-month" class="btn btn-circle" aria-label="חודש הבא">›</button>
+        </div>
+      </div>
+
+      <!-- Automated trainee ("מלווה") assignment: week picker + target picker + run button -->
+      <div class="auto-assign-bar">
+        <div class="auto-assign-week">
+          <label class="aa-week-label" for="auto-assign-week">בחר שבוע לשיבוץ</label>
+          <input type="date" id="auto-assign-week" class="aa-week-input" />
+          <span id="auto-assign-week-range" class="aa-week-range" aria-live="polite"></span>
+        </div>
+        <button type="button" id="auto-assign-btn" class="btn btn-primary">הפעלת מנוע השיבוץ</button>
+        <div class="auto-assign-select">
+          <button type="button" id="auto-assign-toggle" class="btn btn-ghost" aria-haspopup="true" aria-expanded="false">
+            בחירת מלווים <span id="auto-assign-count" class="aa-count"></span>
+          </button>
+          <div id="auto-assign-panel" class="auto-assign-panel" hidden>
+            <label class="aa-opt aa-all">
+              <input type="checkbox" id="auto-assign-all" />
+              <span>כל המלווים</span>
+            </label>
+            <div id="auto-assign-list" class="aa-list"></div>
+          </div>
+        </div>
+        <p class="auto-assign-hint">בחרו מלווה אחד, כמה מלווים, או את כולם. ללא בחירה — המנוע יעבד את כל המלווים המאושרים. בסיום יוצג דוח שיבוץ מפורט.</p>
+      </div>
+
+      <!-- Weekly availability submission tracking (admin): who has submitted their
+           constraints for the selected week and who has not. -->
+      <section class="submission-status" aria-label="סטטוס הגשת זמינות שבועית">
+        <button type="button" id="submission-toggle" class="submission-head" aria-expanded="false" aria-controls="submission-panel">
+          <span class="submission-caret" aria-hidden="true">›</span>
+          <span class="submission-title">סטטוס הגשת זמינות שבועית</span>
+          <span class="submission-summary" id="submission-summary"></span>
+        </button>
+        <div id="submission-panel" class="submission-panel" hidden>
+          <div class="submission-weeknav">
+            <button type="button" id="submission-prev-week" class="btn btn-circle" aria-label="שבוע קודם">‹</button>
+            <span id="submission-week-label" class="submission-week-label"></span>
+            <button type="button" id="submission-next-week" class="btn btn-circle" aria-label="שבוע הבא">›</button>
+          </div>
+          <div class="submission-grid">
+            <div class="submission-col is-submitted">
+              <h4 class="submission-col-title">הגישו זמינות <span id="submission-submitted-count" class="submission-count"></span></h4>
+              <ul id="submission-submitted-list" class="submission-list"></ul>
+            </div>
+            <div class="submission-col is-pending">
+              <div class="submission-col-head">
+                <h4 class="submission-col-title">טרם הגישו <span id="submission-pending-count" class="submission-count"></span></h4>
+                <button type="button" id="submission-copy-pending" class="btn-xs btn-copy">העתקת שמות</button>
+              </div>
+              <ul id="submission-pending-list" class="submission-list"></ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="engine-report" class="engine-report" aria-live="polite"></section>
+
+      <!-- Bulk import of an official MDA monthly schedule (Paramedic + Driver) -->
+      <section class="import-bar" aria-label="ייבוא סידור ממד״א">
+        <div class="import-head">
+          <h3 class="import-title">ייבוא סידור ממד״א</h3>
+          <p class="import-hint">העלו צילום מסך, קובץ Excel או PDF של הסידור הרשמי. השיבוצים יפוענחו ויעדכנו את משבצות הפראמדיק/ית והנהג/ת לפי תאריך, סוג משמרת ותחנה. שיבוצי המלווים נשמרים.</p>
+        </div>
+        <label class="import-dropzone" id="import-dropzone">
+          <input type="file" id="import-file" accept="image/*,.pdf,.xlsx,.xls,.csv" hidden />
+          <svg class="import-dropzone-icon" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 16V4" />
+            <path d="m7 9 5-5 5 5" />
+            <path d="M5 16v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2" />
+          </svg>
+          <span class="import-dropzone-text">גררו קובץ לכאן או לחצו לבחירה</span>
+          <span class="import-file-name" id="import-file-name"></span>
+        </label>
+        <button type="button" id="import-btn" class="btn btn-primary" disabled>ייבוא סידור</button>
+      </section>
+
+    </main>
+
+    <!-- ---- WHITE AMBULANCE SCHEDULE TAB (strict admin only) ---- -->
+    <main id="tab-white-schedule" class="tab-panel" role="region" aria-label="לוח שיבוצים - לבן" hidden>
+      <div id="white-ambulance-panel" class="white-ambulance-panel">
+        <div class="page-head">
+          <div>
+            <h2 class="page-title">לוח שיבוצים - לבן</h2>
+            <p class="page-sub">לוח שיבוצים מבודד לקו האמבולנס הלבן בלבד. כל קריאה וכתיבה מתבצעת רק על תחנות שסומנו כ-White Ambulance.</p>
+          </div>
+          <div class="month-nav">
+            <button type="button" id="white-prev-month" class="btn btn-circle" aria-label="חודש קודם">‹</button>
+            <span id="white-month-label" class="month-label"></span>
+            <button type="button" id="white-next-month" class="btn btn-circle" aria-label="חודש הבא">›</button>
+          </div>
+        </div>
+
+        <div class="calendar-wrap white-calendar-wrap">
+          <div class="calendar-weekdays" id="white-calendar-weekdays" aria-hidden="true"></div>
+          <div class="calendar-grid" id="white-calendar-grid"></div>
+        </div>
+
+        <section class="lock-config-card white-ambulance-toolbar" aria-label="בחירת יום לייבוא">
+          <div class="lock-config-head">
+            <h3>בחירת יום עבודה</h3>
+            <p class="page-sub">בחרו תאריך לעבודה בלוח הלבן. הטאב מנותק מהלוח הראשי ואינו משתמש בבחירת היום של מסך השיבוצים.</p>
+          </div>
+          <div class="white-ambulance-toolbar-row">
+            <label class="field white-ambulance-date-field">
+              <span>תאריך יעד</span>
+              <input type="date" id="white-ambulance-date" dir="ltr" />
+            </label>
+            <button type="button" id="white-ambulance-refresh" class="btn btn-ghost">רענון נתונים</button>
+          </div>
+          <p id="daily-import-day" class="daily-import-day" aria-live="polite"></p>
+        </section>
+
+        <section class="lock-config-card white-ambulance-schedule" aria-label="לוח אמבולנס לבן">
+          <div class="lock-config-head">
+            <h3>לוח שיבוצים יומי - אמבולנס לבן</h3>
+            <p class="page-sub">גרסת עבודה מבודדת של לוח השיבוצים היומי. כל שמירה מתבצעת בקונטקסט White בלבד.</p>
+          </div>
+          <div id="white-ambulance-grid" class="white-ambulance-grid" aria-live="polite"></div>
+          <div class="daily-import-actions">
+            <button type="button" id="white-board-save" class="btn btn-primary">שמירת לוח לבן</button>
+          </div>
+        </section>
+
+        <section class="table-card" aria-label="הגשת בקשות ושורת אישורים">
+          <div class="lock-config-head">
+            <h3>הגשת בקשות שיבוץ</h3>
+            <p class="page-sub">הגשה ידנית בלבד. מנהלים מאשרים או דוחים מתוך התור הממתין, ללא כל מנגנון AI.</p>
+          </div>
+          <form id="white-requests-form" class="station-form" novalidate>
+            <label class="field">
+              <span>תאריך</span>
+              <input type="date" id="white-request-date" dir="ltr" required />
+            </label>
+            <label class="field">
+              <span>תחנה</span>
+              <select id="white-request-station" required></select>
+            </label>
+            <label class="field">
+              <span>משבצת</span>
+              <select id="white-request-slot">
+                <option value="driver">נהג/ת</option>
+                <option value="medic">פראמדיק/ית</option>
+                <option value="intern1">מלווה א׳</option>
+                <option value="intern2">מלווה ב׳</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>הערה</span>
+              <input type="text" id="white-request-note" placeholder="אופציונלי" />
+            </label>
+            <button type="submit" class="btn btn-primary">שליחת בקשה</button>
+          </form>
+          <table class="users-table stations-table">
+            <thead>
+              <tr><th>מבקש/ת</th><th>תאריך</th><th>תחנה</th><th>משבצת</th><th>סטטוס</th><th>הערה</th><th>פעולות</th></tr>
+            </thead>
+            <tbody id="white-requests-tbody"></tbody>
+          </table>
+        </section>
+      </div>
+    </main>
+
+    <!-- ---- WHITE AMBULANCE IMPORT TAB (strict admin only) ---- -->
+    <main id="tab-white-import" class="tab-panel" role="region" aria-label="ייבוא סידור ממד״א - לבן" hidden>
+      <div class="page-head">
+        <div>
+          <h2 class="page-title">ייבוא סידור ממד״א - לבן</h2>
+          <p class="page-sub">סביבת ייבוא פרטית ומבודדת: בוחרים תאריך יעד, מעלים Excel, ומנתחים צוותים לפני כל מגע עם לוח השיבוצים הלבן.</p>
+        </div>
+      </div>
+      <section class="lock-config-card white-ambulance-toolbar" aria-label="בחירת יום לייבוא">
+        <div class="lock-config-head">
+          <h3>תאריך יעד לייבוא</h3>
+          <p class="page-sub">קובץ ה-Excel ייקשר לתאריך זה בלבד במסלול הייבוא הפרטי.</p>
+        </div>
+        <div class="white-ambulance-toolbar-row">
+          <label class="field white-ambulance-date-field">
+            <span>תאריך יעד</span>
+            <input type="date" id="white-import-date" dir="ltr" />
+          </label>
+          <button type="button" id="white-import-refresh" class="btn btn-ghost">רענון נתונים</button>
+        </div>
+        <p id="daily-import-day-import" class="daily-import-day" aria-live="polite"></p>
+      </section>
+      <section class="daily-import white-ambulance-import" aria-label="ייבוא סידור יומי פרטי">
+        <div class="daily-import-panel white-ambulance-import-panel">
+          <p class="daily-import-hint">העלו את קובץ ה‑Excel (xlsx) של הסידור היומי. המערכת תקרא רק תחנות אמבולנס לבן במסלול פרטי, ללא הזרקה אוטומטית ללוח הראשי.</p>
+          <label class="import-dropzone daily-import-dropzone" id="daily-import-dropzone">
+            <input type="file" id="daily-import-file" accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" hidden />
+            <svg class="import-dropzone-icon" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 16V4" />
+              <path d="m7 9 5-5 5 5" />
+              <path d="M5 16v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2" />
+            </svg>
+            <span class="import-dropzone-text">העלה קובץ סידור יומי (Excel)</span>
+            <span class="import-dropzone-sub">גררו קובץ xlsx לכאן או לחצו לבחירה</span>
+            <span class="import-file-name" id="daily-import-file-name"></span>
+          </label>
+        </div>
+      </section>
+      <section class="lock-config-card white-ambulance-schedule" aria-label="תצוגת פענוח קובץ">
+        <div class="lock-config-head">
+          <h3>תוצאות פענוח פרטיות</h3>
+          <p class="page-sub">הרשומות שמוצגות כאן נשמרות במסלול הייבוא הפרטי בלבד.</p>
+        </div>
+        <div id="white-import-grid" class="white-ambulance-grid" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <!-- ---- WHITE AMBULANCE MONTHLY TAB (strict admin only) ---- -->
+    <main id="tab-white-monthly" class="tab-panel" role="region" aria-label="שיבוץ חודשי - אמבולנס לבן" hidden>
+      <div class="page-head">
+        <div>
+          <h2 class="page-title">שיבוץ חודשי - אמבולנס לבן</h2>
+          <p class="page-sub">מבט חודשי מבודד לקו האמבולנס הלבן בלבד. הטבלה נבנית רק מתחנות הקשר הלבן והייבוא הפרטי.</p>
+        </div>
+        <div class="month-nav">
+          <button type="button" id="white-matrix-prev-month" class="btn btn-circle" aria-label="חודש קודם">‹</button>
+          <span id="white-matrix-month-label" class="month-label"></span>
+          <button type="button" id="white-matrix-next-month" class="btn btn-circle" aria-label="חודש הבא">›</button>
+        </div>
+      </div>
+      <div id="white-matrix-wrap" class="matrix-wrap white-matrix-wrap"></div>
+    </main>
+
+    <!-- ---- WHITE AMBULANCE STATIONS TAB (strict admin only) ---- -->
+    <main id="tab-white-stations" class="tab-panel" role="region" aria-label="ניהול תחנות ומשמרות - אמבולנס לבן" hidden>
+      <div class="page-head">
+        <div>
+          <h2 class="page-title">ניהול תחנות ומשמרות - אמבולנס לבן</h2>
+          <p class="page-sub">מסך הגדרות ממוקד לקו האמבולנס הלבן בלבד. ללא נעילות, פרסום שבועי, תזכורות או כלי מחזור חניכים.</p>
+        </div>
+      </div>
+
+      <div class="station-form-card">
+        <form id="white-station-form" class="station-form" novalidate>
+          <label class="field">
+            <span>שם התחנה</span>
+            <input type="text" id="white-station-name" placeholder="לדוגמה: אמבולנס לבן 1" required />
+          </label>
+          <label class="field">
+            <span>סוג משמרת</span>
+            <select id="white-station-shift">
+              <option value="morning">בוקר</option>
+              <option value="evening">ערב</option>
+              <option value="night">לילה</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>שעות פעילות</span>
+            <input type="text" id="white-station-hours" placeholder="06:00 – 14:00" dir="ltr" required />
+          </label>
+          <button type="submit" class="btn btn-primary">הוספת תחנה</button>
+        </form>
+      </div>
+
+      <div class="table-card">
+        <table class="users-table stations-table">
+          <thead>
+            <tr><th>שם התחנה</th><th>סוג משמרת</th><th>שעות פעילות</th><th>פעולות</th></tr>
+          </thead>
+          <tbody id="white-stations-tbody"></tbody>
+        </table>
+      </div>
+    </main>
+
+    <!-- ---- WEEKLY AVAILABILITY TAB ---- -->
+    <main id="tab-weekly" class="tab-panel" role="region" aria-label="הגשת אילוצים שבועית" hidden>
+      <div class="page-head">
+        <div>
+          <h2 class="page-title">הגשת אילוצים שבועית</h2>
+          <p class="page-sub">סמנו את העדפת השיבוץ שלכם לכל משמרת בשבוע הקרוב, ושמרו הכול בלחיצה אחת.</p>
+        </div>
+      </div>
+      <section id="weekly-view" class="weekly-view"></section>
+    </main>
+
+    <!-- ---- MY SHIFTS TAB ---- -->
+    <main id="tab-forms" class="tab-panel" role="region" aria-label="המשמרות שלי" hidden>
+      <div class="page-head">
+        <div>
+          <h2 class="page-title">המשמרות שלי</h2>
+          <p class="page-sub">המשמרות המשובצות שלך בלבד. לכל משמרת רלוונטית מוצג סימון מינימלי: "בוצע טופס חניכה" עם תיבת סימון.</p>
+        </div>
+      </div>
+
+      <div class="forms-toolbar">
+        <label class="field forms-search">
+          <span>חיפוש</span>
+          <input type="search" id="forms-search" placeholder="חיפוש לפי תחנה או תאריך" />
+        </label>
+        <label class="field">
+          <span>סוג משמרת</span>
+          <select id="forms-shift-filter">
+            <option value="all">כל המשמרות</option>
+            <option value="night">לילה</option>
+            <option value="morning">בוקר</option>
+            <option value="evening">ערב</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>סטטוס טופס</span>
+          <select id="forms-status-filter">
+            <option value="all">הכול</option>
+            <option value="done">בוצע</option>
+            <option value="pending">טרם בוצע</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="table-card">
+        <table class="users-table forms-table">
+          <thead>
+            <tr><th>תאריך</th><th>משמרת</th><th>תחנה</th><th>בוצע טופס חניכה</th><th>הוסף ליומן</th></tr>
+          </thead>
+          <tbody id="forms-tbody"></tbody>
+        </table>
+      </div>
+    </main>
+
+    <!-- ---- FORM-COMPLETION TRACKING TAB (managers only) ---- -->
+    <main id="tab-tracking" class="tab-panel" role="region" aria-label="מעקב ביצוע טפסים" hidden>
+      <div class="page-head">
+        <div>
+          <h2 class="page-title">מעקב ביצוע טפסים</h2>
+          <p class="page-sub">מעקב ניהולי מינימלי אחר סימון "בוצע טופס חניכה".</p>
+        </div>
+      </div>
+
+      <!-- Missing-forms report (managers only) -->
+      <section id="missing-forms-section" class="missing-forms-section" hidden>
+        <div class="page-head">
+          <div>
+            <h3 class="page-title">דוח טפסים חסרים</h3>
+            <p class="page-sub">משמרות משובצות שטרם סומן עבורן טופס חניכה / הערכה. סמנו "לא נדרש טופס" עבור מלווה שאינו חניך כדי להסיר את השורה מהדוח.</p>
+          </div>
+        </div>
+        <div class="table-card">
+          <table class="users-table forms-table missing-forms-table">
+            <thead>
+              <tr><th>תאריך</th><th>משמרת</th><th>תחנה</th><th>שם החניך</th><th>לא נדרש טופס</th></tr>
+            </thead>
+            <tbody id="missing-forms-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="forms-toolbar">
+        <label class="field forms-search">
+          <span>חיפוש</span>
+          <input type="search" id="tracking-search" placeholder="חיפוש לפי שם חניך, תחנה או תאריך" />
+        </label>
+        <label class="field">
+          <span>סוג משמרת</span>
+          <select id="tracking-shift-filter">
+            <option value="all">כל המשמרות</option>
+            <option value="night">לילה</option>
+            <option value="morning">בוקר</option>
+            <option value="evening">ערב</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>סטטוס טופס</span>
+          <select id="tracking-status-filter">
+            <option value="all">הכול</option>
+            <option value="done">בוצע</option>
+            <option value="pending">טרם בוצע</option>
+          </select>
+        </label>
+        <label class="field forms-trainee-field" id="tracking-trainee-wrap">
+          <span>חניך/ה</span>
+          <select id="tracking-trainee-filter">
+            <option value="all">כל החניכים</option>
+          </select>
+        </label>
+      </div>
+
+      <div id="tracking-groups" class="tracking-groups"></div>
+    </main>
+
+    <!-- ---- PLACEMENT / REGIONAL NOTES TAB ---- -->
+    <main id="tab-placement" class="tab-panel" role="region" aria-label="הערות שיבוץ ומרחב" hidden>
+      <div class="page-head">
+        <div>
+          <h2 class="page-title">הערות שיבוץ ומרחב</h2>
+          <p class="page-sub">הערות שיבוץ כלליות ושיבוץ מחוץ לתחנה — למשל שליחת חניך/ה למשמרת תגבור בתחנה אחרת במרחב או משימה מרחבית אחרת.</p>
+        </div>
+        <button type="button" id="placement-refresh" class="btn btn-ghost">רענון</button>
+      </div>
+
+      <!-- Schedulers/Admins: assign a spatial note to a trainee for a specific day/shift -->
+      <form id="placement-admin-form" class="lock-config-card placement-admin" novalidate hidden>
+        <div class="lock-config-head">
+          <h3>שיוך הערת שיבוץ לחניך/ה</h3>
+          <p class="page-sub">בחרו חניך/ה, בחרו את היום (ומשמרת אם רלוונטי) וכתבו את הערת השיבוץ. שמירה חוזרת לאותו חניך/ה ואותו יום מעדכנת את ההערה הקיימת.</p>
+        </div>
+        <div class="placement-fields">
+          <label class="field">
+            <span>חניך/ה</span>
+            <select id="placement-user"></select>
+          </label>
+          <label class="field">
+            <span>תאריך</span>
+            <input type="date" id="placement-date" dir="ltr" />
+          </label>
+          <label class="field">
+            <span>משמרת (לא חובה)</span>
+            <select id="placement-shift">
+              <option value="">כל היום</option>
+              <option value="morning">בוקר</option>
+              <option value="evening">ערב</option>
+              <option value="night">לילה</option>
+            </select>
+          </label>
+        </div>
+        <label class="field">
+          <span>הערת שיבוץ</span>
+          <textarea id="placement-note" rows="2" placeholder="לדוגמה: נשלח/ת למשמרת תגבור בתחנת בני ברק"></textarea>
+        </label>
+        <button type="submit" class="btn btn-primary">שמירת הערת שיבוץ</button>
+      </form>
+
+      <section id="placement-list" class="placement-list"></section>
+    </main>
+
+    <!-- ---- TRAINEE SCHEDULE VIEW TAB ---- -->
+    <main id="tab-trainee-view" class="tab-panel" role="region" aria-label="צפייה בסידור לחניך" hidden>
+      <div class="page-head">
+        <div>
+          <h2 class="page-title">צפייה בסידור לחניך</h2>
+          <p class="page-sub">בחרו חניך/ה מהרשימה וראו את כל המשמרות המשובצות לו/לה בשבועות הקרובים. משמרות משובצות יופיעו בצבע ירוק לכל קלות.</p>
+        </div>
+      </div>
+
+      <div id="trainee-view-edit-banner" class="matrix-edit-banner" hidden>מצב עריכה פעיל</div>
+      
+      <div class="trainee-view-container">
+        <div class="trainee-selector-wrap">
+          <div class="field trainee-selector-field">
+            <label class="field">
+              <span>בחירת חניך/ה</span>
+              <select id="trainee-view-select" class="trainee-view-select">
+                <option value="">-- בחר חניך/ה --</option>
+              </select>
+            </label>
+            <div id="trainee-view-edit-toggle" class="trainee-view-edit-toggle"></div>
+          </div>
+        </div>
+
+        <div id="trainee-schedule-table" class="trainee-schedule-table" hidden>
+          <div class="trainee-schedule-grid">
+            <table class="schedule-grid-table">
+              <thead>
+                <tr>
+                  <th class="col-date">תאריך</th>
+                  <th class="col-weekday">יום בשבוע</th>
+                  <th class="col-constraint col-constraint-night">אילוץ לילה</th>
+                  <th class="col-shift col-night">לילה</th>
+                  <th class="col-constraint col-constraint-morning">אילוץ בוקר</th>
+                  <th class="col-shift col-morning">בוקר</th>
+                  <th class="col-constraint col-constraint-evening">אילוץ ערב</th>
+                  <th class="col-shift col-evening">ערב</th>
+                </tr>
+              </thead>
+              <tbody id="trainee-schedule-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="trainee-schedule-empty" class="trainee-schedule-empty" hidden>
+          <p>בחר חניך/ה מהתפריט לעיל כדי לראות את סידור המשמרות שלו/לה.</p>
+        </div>
+      </div>
+    </main>
+
+    <!-- ---- USERS TAB ---- -->
+    <main id="tab-users" class="tab-panel" role="region" aria-label="ניהול משתמשים" hidden>
+      <div class="page-head">
+        <div>
+          <h2 class="page-title">ניהול משתמשים והרשאות</h2>
+          <p class="page-sub">אישור גישה, שינוי תפקיד וקביעת יעד משמרות שבועי אישי לכל חניך/ה — נשמרים בענן ומסונכרנים בכל המכשירים. במסך זה ניתן גם להדליק/לכבות לכל משתמש את הסימון "נדרש טופס חניכה". המשתמשים מקובצים לפי סטטוס וסוג: ממתינים לאישור, משתלמים פעילים לפי קורס, ומתנדבים.</p>
+        </div>
+      </div>
+
+      <div id="users-sections" class="users-sections"></div>
+      <!-- Legacy hidden table kept so older selectors never break; not rendered. -->
+      <table class="users-table" hidden aria-hidden="true"><tbody id="users-tbody"></tbody></table>
+
+      <!-- Course catalog management -->
+      <div class="lock-config-card courses-panel">
+        <div class="lock-config-head">
+          <h3>ניהול קורסים במערכת</h3>
+          <p class="page-sub">הוסיפו, שנו שם או מחקו קורסי הכשרה. הרשימה מופיעה בבחירת הקורס של כל משתלם/ת בטבלה שלמעלה, וכל שינוי נשמר ומסונכרן מיד בכל המכשירים.</p>
+        </div>
+        <form id="course-form" class="lock-form course-form" novalidate>
+          <label class="field">
+            <span>הוספת קורס חדש</span>
+            <input type="text" id="course-name" placeholder="לדוגמה: קורס פאראמדיקים ג׳" autocomplete="off" required />
+          </label>
+          <button type="submit" class="btn btn-primary">הוספת קורס חדש</button>
+        </form>
+        <ul id="courses-list" class="courses-list" aria-label="רשימת הקורסים במערכת"></ul>
+      </div>
+
+      <!-- Role & permissions management (dynamic RBAC) -->
+      <div class="lock-config-card roles-panel">
+        <div class="lock-config-head">
+          <h3>ניהול הרשאות ותפקידים</h3>
+          <p class="page-sub">הגדירו תפקידים מותאמים אישית (כגון “סדרן” או “מתנדב”) וקבעו לכל תפקיד אילו פעולות מותרות. כל שינוי נשמר מיד, והתפקידים זמינים בבחירת התפקיד של כל משתמש בטבלה שלמעלה.</p>
+        </div>
+
+        <form id="role-form" class="lock-form role-form" novalidate>
+          <label class="field">
+            <span>הוספת תפקיד חדש</span>
+            <input type="text" id="role-name" placeholder="לדוגמה: סדרן" required />
+          </label>
+          <label class="field">
+            <span>יעד שבועי (משמרות בשבוע)</span>
+            <input type="number" id="role-weekly-quota" min="0" step="1" inputmode="numeric" dir="ltr" value="0" />
+          </label>
+          <div class="role-perm-options" id="role-new-perms"></div>
+          <button type="submit" class="btn btn-primary">הוספת תפקיד חדש</button>
+        </form>
+
+        <div class="table-card roles-matrix-card">
+          <table class="users-table roles-matrix">
+            <thead id="roles-matrix-head"></thead>
+            <tbody id="roles-matrix-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <!-- ---- STATIONS TAB ---- -->
+    <main id="tab-stations" class="tab-panel" role="region" aria-label="ניהול תחנות ומשמרות" hidden>
+      <div class="page-head">
+        <div>
+          <h2 class="page-title">ניהול תחנות ומשמרות</h2>
+          <p class="page-sub">הגדרת התחנות הפעילות — משתקפת מיידית בלוח השיבוצים.</p>
+        </div>
+      </div>
+
+      <div class="lock-config-card">
+        <div class="lock-config-head">
+          <h3>הגדרות נעילת אילוצים</h3>
+          <p class="page-sub">קבעו את היום והשעה שבהם נסגרת הגשת האילוצים לשבוע הקרוב. לאחר מועד זה ממשק החניכים ננעל אוטומטית; למנהלים נשארת גישה מלאה.</p>
+        </div>
+        <form id="lock-form" class="lock-form" novalidate>
+          <label class="lock-toggle">
+            <input type="checkbox" id="lock-enabled" />
+            <span>הפעלת נעילה אוטומטית</span>
+          </label>
+          <label class="field">
+            <span>יום נעילה</span>
+            <select id="lock-day">
+              <option value="0">ראשון</option>
+              <option value="1">שני</option>
+              <option value="2">שלישי</option>
+              <option value="3">רביעי</option>
+              <option value="4">חמישי</option>
+              <option value="5">שישי</option>
+              <option value="6">שבת</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>שעת נעילה</span>
+            <input type="time" id="lock-time" value="20:00" dir="ltr" />
+          </label>
+          <button type="submit" class="btn btn-primary">שמירת הגדרות</button>
+        </form>
+      </div>
+
+      <div class="lock-config-card deadline-reminder-card">
+        <div class="lock-config-head">
+          <h3>תזכורת הגשה במייל</h3>
+          <p class="page-sub">משתלמים שטרם הגישו את האילוצים שלהם יקבלו תזכורת אוטומטית במייל ובמרכז ההתראות. קבעו כמה שעות לפני מועד הנעילה תישלח התזכורת. פעיל רק כאשר הנעילה האוטומטית מופעלת.</p>
+        </div>
+        <form id="deadline-reminder-form" class="lock-form deadline-reminder-form" novalidate>
+          <label class="field">
+            <span>שליחת תזכורת (שעות לפני הנעילה)</span>
+            <input type="number" id="deadline-reminder-hours" min="1" step="1" inputmode="numeric" dir="ltr" value="24" />
+          </label>
+          <button type="submit" class="btn btn-primary">שמירת הגדרות</button>
+        </form>
+      </div>
+
+      <div class="lock-config-card crew-reveal-card">
+        <div class="lock-config-head">
+          <h3>חשיפת צוות למשתלמים</h3>
+          <p class="page-sub">שמות הנהג/ת והפראמדיק/ית מוסתרים מהמשתלמים ומחשבונות הצפייה עד שמתקרב מועד המשמרת. קבעו כמה שעות לפני תחילת המשמרת ייחשפו השמות. ערך 0 מבטל את ההסתרה והשמות מוצגים תמיד. מנהלים רואים את הצוות תמיד.</p>
+        </div>
+        <form id="crew-reveal-form" class="lock-form crew-reveal-form" novalidate>
+          <label class="field">
+            <span>חלון חשיפת צוות למשתלמים (בשעות)</span>
+            <input type="number" id="crew-reveal-hours" min="0" step="1" inputmode="numeric" dir="ltr" value="0" />
+          </label>
+          <button type="submit" class="btn btn-primary">שמירת הגדרות</button>
+        </form>
+      </div>
+
+      <div class="lock-config-card publish-config-card">
+        <div class="lock-config-head">
+          <h3>פרסם סידור שבועי לצוות</h3>
+          <p class="page-sub">בחרו שבוע ופרסמו אותו לצפיית החניכים. אפשר לפרסם כמה שבועות שרוצים — כל שבוע שמתווסף לרשימה נפתח לצפייה. שבועות שלא פורסמו יופיעו נעולים בלוח של החניכים עם הכיתוב “הסידור לשבוע זה טרם פורסם”. למנהלים נשמרת תצוגה ועריכה מלאה תמיד.</p>
+        </div>
+        <form id="publish-form" class="lock-form" novalidate>
+          <label class="field">
+            <span>בחירת שבוע לפרסום</span>
+            <select id="publish-week"></select>
+          </label>
+          <label class="field">
+            <span>שליחת מיילים לחניכים</span>
+            <select id="publish-email-target">
+              <option value="all">שליחה לכל החניכים</option>
+              <option value="specific">שליחה לחניך ספציפי</option>
+              <option value="none" selected>ללא שליחת מיילים כלל</option>
+            </select>
+          </label>
+          <label class="field" id="publish-trainee-field" hidden>
+            <span>בחירת חניך/ה</span>
+            <select id="publish-trainee"></select>
+          </label>
+          <button type="submit" class="btn btn-primary">פרסם שבוע</button>
+        </form>
+        <ul id="published-weeks-list" class="published-weeks-list"></ul>
+      </div>
+
+      <div class="station-form-card">
+        <form id="station-form" class="station-form" novalidate>
+          <label class="field">
+            <span>שם התחנה</span>
+            <input type="text" id="station-name" placeholder="לדוגמה: ניידת טיפול נמרץ" required />
+          </label>
+          <label class="field">
+            <span>סוג משמרת</span>
+            <select id="station-shift">
+              <option value="morning">בוקר</option>
+              <option value="evening">ערב</option>
+              <option value="night">לילה</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>שעות פעילות</span>
+            <input type="text" id="station-hours" placeholder="06:00 – 14:00" dir="ltr" required />
+          </label>
+          <button type="submit" class="btn btn-primary">הוספת תחנה</button>
+        </form>
+      </div>
+
+      <div class="table-card">
+        <table class="users-table stations-table">
+          <thead>
+            <tr><th>שם התחנה</th><th>סוג משמרת</th><th>שעות פעילות</th><th>פעולות</th></tr>
+          </thead>
+          <tbody id="stations-tbody"></tbody>
+        </table>
+      </div>
+    </main>
+
+    <!-- ---- ROSTER TAB ---- -->
+    <main id="tab-roster" class="tab-panel" role="region" aria-label="ניהול סגל ורשימות" hidden>
+      <div class="page-head">
+        <div>
+          <h2 class="page-title">ניהול סגל ורשימות</h2>
+          <p class="page-sub">רשימת השמות לבחירה מהירה בלוח השיבוצים. שינויים נשמרים מיידית ומשתקפים בכל התפריטים.</p>
+        </div>
+      </div>
+
+      <section class="user-group roster-collapse" id="roster-section">
+        <button type="button" class="user-group-head" aria-expanded="false" data-acc-toggle>
+          <span class="user-group-caret">›</span>
+          <span class="user-group-titles">
+            <span class="user-group-title">📋 רשימת השמות לבחירה מהירה</span>
+          </span>
+        </button>
+        <div class="user-group-body">
+          <div class="acc-inner">
+            <div class="station-form-card">
+              <form id="roster-form" class="station-form roster-form" novalidate>
+                <label class="field">
+                  <span>שם איש צוות</span>
+                  <input type="text" id="roster-name" placeholder="לדוגמה: דנה לוי" required />
+                </label>
+                <button type="submit" class="btn btn-primary">הוספה לרשימה</button>
+              </form>
+            </div>
+
+            <div class="table-card">
+              <table class="users-table roster-table">
+                <thead>
+                  <tr><th>שם איש הצוות</th><th>טיוטור מאושר</th><th>פעולות</th></tr>
+                </thead>
+                <tbody id="roster-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="page-head" style="margin-block-start: 1.75rem;">
+        <div>
+          <h3 class="page-title">סגל פראמדיקים מוסמכים – טיוטורים מאושרים</h3>
+          <p class="page-sub">סימון "טיוטור מאושר" קובע אילו פראמדיקים רשאים לארח סטאז'רים במשמרת עבור השיבוץ האוטומטי. זוהי הרשאת שיבוץ בלבד ואינה משפיעה על פרטי ההתחברות או על אישור ההרשמה.</p>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <table class="users-table tutors-roster-table">
+          <thead>
+            <tr><th>שם</th><th>שיוך</th><th>טיוטור מאושר</th></tr>
+          </thead>
+          <tbody id="approved-tutors-tbody"></tbody>
+        </table>
+      </div>
+
+      <section class="user-group roster-collapse" id="manual-tutor-section" style="margin-block-start: 1.75rem;">
+        <button type="button" class="user-group-head" aria-expanded="false" data-acc-toggle>
+          <span class="user-group-caret">›</span>
+          <span class="user-group-titles">
+            <span class="user-group-title">👤 ניהול והוספת טיוטורים ידניים</span>
+          </span>
+        </button>
+        <div class="user-group-body">
+          <div class="acc-inner">
+            <p class="page-sub">הוסיפו טיוטור/ית לפי שם — גם כאשר אין לו/ה חשבון רשום במערכת. ניתן לסמן ולהסיר את אישור הטיוטור בכל עת. רשימה זו נפרדת מרשימת המשתמשים הרשומים.</p>
+
+            <div class="station-form-card">
+              <form id="manual-tutor-form" class="station-form roster-form" novalidate>
+                <label class="field">
+                  <span>שם הטיוטור/ית</span>
+                  <input type="text" id="manual-tutor-name" placeholder="לדוגמה: עידן כהן" autocomplete="off" required />
+                </label>
+                <button type="submit" class="btn btn-primary">הוספת טיוטור</button>
+              </form>
+            </div>
+
+            <div class="table-card">
+              <table class="users-table tutors-roster-table">
+                <thead>
+                  <tr><th>שם</th><th>טיוטור מאושר</th><th>פעולות</th></tr>
+                </thead>
+                <tbody id="manual-tutors-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="./assets/js/app.js"></script>
+</body>
+</html>
